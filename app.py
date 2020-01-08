@@ -45,6 +45,11 @@ def login_user():
 
     return render_template("profile.html", email=session['email'])
 
+@app.route('/logout')
+def logout_user():
+    User.logout()
+    return render_template('login.html')
+
 
 @app.route('/auth/register', methods=['POST'])
 def register_user():
