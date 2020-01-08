@@ -47,16 +47,26 @@ def login_user():
 
     return render_template("profile.html", email=session['email'])
 
+@app.route('/logout')
+def logout_user():
+    User.logout()
+    return render_template('login.html')
+
 
 @app.route('/auth/register', methods=['POST'])
 def register_user():
     email = request.form['email']
     password = request.form['password']
 
-    User.register(email, password)
-    session['email']=email
+    if User.register(email, password):
+        session['email'] = email
+        return render_template("profile.html", email=session['email'])
+    else:
+        session['email']=None
+        return render_template("login.html")
 
-    return render_template("profile.html", email=session['email'])
+
+   
 
 
 @app.route('/blogs/<string:user_id>')
