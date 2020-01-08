@@ -51,10 +51,14 @@ def register_user():
     email = request.form['email']
     password = request.form['password']
 
-    User.register(email, password)
-    session['email']=email
+    if User.login_valid(email, password):
+        User.login(email)
+    else:
+        session['email'] = None
 
     return render_template("profile.html", email=session['email'])
+
+   
 
 
 @app.route('/blogs/<string:user_id>')
