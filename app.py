@@ -51,12 +51,13 @@ def register_user():
     email = request.form['email']
     password = request.form['password']
 
-    if User.login_valid(email, password):
-        User.login(email)
+    if User.register(email, password):
+        session['email'] = email
+        return render_template("profile.html", email=session['email'])
     else:
-        session['email'] = None
+        session['email']=None
+        return render_template("login.html")
 
-    return render_template("profile.html", email=session['email'])
 
    
 
