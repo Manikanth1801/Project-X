@@ -65,12 +65,12 @@ def register_user():
 
     if User.register(email, password):
         session['email'] = email
-        return render_template("profile.html", email=session['email'])
+        return redirect(url_for('Profile_of_User'))
     else:
+        #Add a comment saying you are already registered
         session['email']=None
-        return render_template("login.html")
-
-
+        return redirect(url_for('login_user'))
+        
    
 
 
