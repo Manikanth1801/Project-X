@@ -19,6 +19,10 @@ app.secret_key='siva123'
 def home_template():
     return render_template('home.html')
 
+@app.route('/profile')
+def Profile_of_User():
+    return render_template('profile.html')
+
 
 @app.route('/login')
 def login_template():
@@ -42,6 +46,7 @@ def login_user():
 
     if User.login_valid(email, password):
         User.login(email)
+        return url_for('Profile_of_User')
     else:
         session['email'] = None
 
