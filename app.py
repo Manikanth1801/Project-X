@@ -69,7 +69,7 @@ def register_user():
     else:
         #Add a comment saying you are already registered
         session['email']=None
-        return redirect(url_for('login_user'))
+        return redirect(url_for('login_template'))
         
    
 
