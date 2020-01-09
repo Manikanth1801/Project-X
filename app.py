@@ -42,13 +42,16 @@ def login_user():
 
     if User.login_valid(email, password):
         User.login(email)
-        @app.route('/profile')
-        def Profile_of_User():
-            return render_template("profile.html", email=session['email'])
+        return redirect(url_for('Profile_of_User'))        
     else:
         session['email'] = None
         return render_template("login.html")
 
+@app.route('/profile')
+def Profile_of_User():
+    return render_template("profile.html", email=session['email'])
+    
+    
 @app.route('/logout')
 def logout_user():
     User.logout()
