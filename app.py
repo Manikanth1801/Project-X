@@ -48,7 +48,7 @@ def is_logged_in(f):
         if 'logged_in' in session:
             return f(*args, **kwargs)
         else:
-            flash('Unauthorized User, Please login')
+            flash('Unauthorized User, Please login', 'danger')
             return redirect(url_for('login_user'))
     return wrap
 
@@ -78,7 +78,7 @@ def register_user():
             session['username'] = username
             return redirect(url_for('Profile_of_User'))
 
-        flash('Either Username or Email is already registered in the system!', 'error')
+        flash('Either Username or Email is already registered in the system!', 'danger')
         # Add a comment saying you are already registered
         session['username'] = None
     return redirect(url_for('register_template'))
