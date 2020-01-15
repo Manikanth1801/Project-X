@@ -55,7 +55,7 @@ def is_logged_in(f):
         else:
             flash('Unauthorized User, Please login', 'danger')
             return redirect(url_for('login_user'))
-    return wrap
+    return wrap   
 
 
 @app.route('/profile')
