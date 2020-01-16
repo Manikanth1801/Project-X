@@ -1,34 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Homepage</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-</head>
-<body>
-    {% include '_navbar.html' %}
-    <div class="container">
-      
-      {% block body %}{% endblock %}
-        {% if session.email %}
-            pass
-        {% else %}
-              
-            
-            <p>Hi There. You are now viewing our Home Page. Please register if you havent registered yet. Please login 
-                if you have already registered. 
-                </p>
-            <a href="/register" class="btn btn-primary btn-lg">Register</a>
-            <a href="/login" class="btn btn-success btn-lg">Login</a>
-        {% endif %}
-    </div>
-    
+{% extends 'base.html' %}
 
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="//cdn.ckeditor.com/4.6.2/basic/ckeditor.js"></script>
-    <script type="text/javascript">
-      CKEDITOR.replace('editor')
-    </script>
-
-</body>
-</html>
+{% block body %}
+  <div class="jumbotron text-center">
+    <h1>Welcome To ProjectX</h1>
+    <p class="lead">This is a sample front page</p>
+    {% if session.logged_in == NULL %}
+      <a href="/register" class="btn btn-primary btn-lg">Register</a>
+      <a href="/login" class="btn btn-success btn-lg">Login</a>
+    {% endif %}
+  </div>
+{% endblock %}s
