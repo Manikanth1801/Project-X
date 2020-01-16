@@ -131,7 +131,7 @@ class User(object):
         }
 
     def save_to_mongo(self):
-        Database.insert("user", self.json())
+        Database.insert("users", self.json()) #use the collection name which is in db always
 
     def save_org_mongo(self):
         Database.insert("org", self.json_org())
