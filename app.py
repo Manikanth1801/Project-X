@@ -82,7 +82,7 @@ def register_user():
 
         if User.register(name, email, username, password, usertype):
             session['username'] = username
-            data = Database.find_one("User", {"username": session['username']})
+            data = Database.find_one("users", {"username": session['username']})
             usrType = data['type']
             if usrType == 'Organizer':
                 return redirect(url_for('orgReg'))
