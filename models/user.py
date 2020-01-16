@@ -28,7 +28,8 @@ class User(object):
         #data2 = Database.find_one("test", {"username": username}) fixed internal server error if user already exists
         if data1 is not None:
             return cls(**data1)
-        elif data2 = Database.find_one("test", {"username": username}):
+        else:
+            data2 = Database.find_one("test", {"username": username})
             if data2 is not None:
                 return cls(**data2)
         return False
