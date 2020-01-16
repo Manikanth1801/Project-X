@@ -74,15 +74,15 @@ def logout_user():
 @app.route('/auth/register', methods=['POST', 'GET'])
 def register_user():
     if request.method == 'POST':
-        name1 = request.form['name']
+        name = request.form['name']
         email = request.form['email']
         username = request.form['username']
         password = request.form['password']
         usertype = request.form['type']
 
-        if User.register(name1, email, username, password, usertype):
+        if User.register(name, email, username, password, usertype):
             session['username'] = username
-            data = Database.find_one("test", {"username": session['username']})
+            data = Database.find_one("User", {"username": session['username']})
             usrType = data['type']
             if usrType == 'Organizer':
                 return redirect(url_for('orgReg'))
