@@ -25,11 +25,6 @@ def register_template():
     return render_template('register.html')
 
 
-@app.route('/register/auth/organizer')
-def org_register_template():
-    return render_template('org_register.html')
-
-
 @app.before_first_request
 def initialize_database():
     Database.initialize()
@@ -78,31 +73,15 @@ def register_user():
         email = request.form['email']
         username = request.form['username']
         password = request.form['password']
-        usertype = request.form['type']
 
-        if User.register(name, email, username, password, usertype):
+        if User.register(name, email, username, password):
             session['username'] = username
-            data = Database.find_one("users", {"username": session['username']})
-            usrType = data['type']
-            if usrType == 'Organizer':
-                return redirect(url_for('orgReg'))
             return redirect(url_for('Profile_of_User'))
 
         flash('Either Username or Email is already registered in the system!', 'error')
         # Add a comment saying you are already registered
         session['username'] = None
     return redirect(url_for('register_template'))
-
-
-@app.route('/auth/register/organizer', methods=['GET', 'POST'])
-def orgReg():
-    if request.method == 'POST':
-        org_name = request.form['org_name']
-        org_email = request.form['org_email']
-        address = request.form['address']
-        if User.orgRegister(org_name, org_email, address):
-            return redirect(url_for('Profile_of_User'))
-    return redirect(url_for('org_register_template'))
 
 
 # @app.route('/blogs/<string:user_id>')
