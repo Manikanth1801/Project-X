@@ -61,7 +61,7 @@ class User(object):
         if user is False:
             # User doesn't exist, so we can create it
             enc_password = sha256_crypt.encrypt(str(password))
-            new_user = cls(name, email, username, enc_password, usertype)
+            new_user = cls(name, email, username, enc_password)
             new_user.save_to_mongo()
             session['username'] = username
             session['logged_in'] = True
