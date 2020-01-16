@@ -86,6 +86,7 @@ def register_user():
             usrType = data['type']
             if usrType == 'Organizer':
                 return redirect(url_for('orgReg'))
+            return redirect(url_for('Profile_of_User'))
 
         flash('Either Username or Email is already registered in the system!', 'error')
         # Add a comment saying you are already registered
