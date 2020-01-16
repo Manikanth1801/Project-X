@@ -24,27 +24,27 @@ class User(object):
 
     @classmethod
     def get_by_email(cls, email, username):
-        data1 = Database.find_one("test", {"email": email})
+        data1 = Database.find_one("User", {"email": email})
         #data2 = Database.find_one("test", {"username": username}) fixed internal server error if user already exists
         if data1 is not None:
             return cls(**data1)
         else:
-            data2 = Database.find_one("test", {"username": username})
+            data2 = Database.find_one("User", {"username": username})
             if data2 is not None:
                 return cls(**data2)
         return False
 
     @classmethod
     def get_by_id(cls, _id):
-        data = Database.find_one("test", {"_id": _id})
+        data = Database.find_one("User", {"_id": _id})
         if data is not None:
             return cls(**data)
 
     @staticmethod
     def login(email, password):
         # Check whether a user's email matches the password they sent us
-        data1 = Database.find_one("test", {"username": email})
-        data2 = Database.find_one("test", {"email": email})
+        data1 = Database.find_one("User", {"username": email})
+        data2 = Database.find_one("User", {"email": email})
         if (data1 or data2) is not None:
             if data1 is not None:
                 dbPassword = data1['password']
@@ -131,7 +131,7 @@ class User(object):
         }
 
     def save_to_mongo(self):
-        Database.insert("test", self.json())
+        Database.insert("User", self.json())
 
     def save_org_mongo(self):
         Database.insert("org", self.json_org())
