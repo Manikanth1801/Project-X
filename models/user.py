@@ -7,25 +7,17 @@ from passlib.hash import sha256_crypt
 
 
 class User(object):
-    def __init__(self, name, email, username, password, usertype, _id=None):
+    def __init__(self, name, email, username, password, _id=None):
         self.name = name
         self.email = email
         self.username = username
         self.password = password
-        self.usertype = usertype
-        self._id = uuid.uuid4().hex if _id is None else _id
-
-    def __init__(self, org_name, org_email, org_username, address, _id=None):
-        self.org_name = org_name
-        self.org_email = org_email
-        self.org_username = org_username
-        self.address = address
         self._id = uuid.uuid4().hex if _id is None else _id
 
     @classmethod
     def get_by_email(cls, email, username):
-        data1 = Database.find_one("test", {"email": email})
-        data2 = Database.find_one("test", {"username": username})
+        data1 = Database.find_one("users", {"email": email})
+        data2 = Database.find_one("users", {"username": username})
         if data1 is not None:
             return cls(**data1)
         elif data2 is not None:
@@ -34,15 +26,15 @@ class User(object):
 
     @classmethod
     def get_by_id(cls, _id):
-        data = Database.find_one("test", {"_id": _id})
+        data = Database.find_one("users", {"_id": _id})
         if data is not None:
             return cls(**data)
 
     @staticmethod
     def login(email, password):
         # Check whether a user's email matches the password they sent us
-        data1 = Database.find_one("test", {"username": email})
-        data2 = Database.find_one("test", {"email": email})
+        data1 = Database.find_one("users", {"username": email})
+        data2 = Database.find_one("users", {"email": email})
         if (data1 or data2) is not None:
             if data1 is not None:
                 dbPassword = data1['password']
@@ -64,12 +56,12 @@ class User(object):
             return render_template('login.html')
 
     @classmethod
-    def register(cls, name, email, username, password, usertype):
+    def register(cls, name, email, username, password):
         user = cls.get_by_email(email, username)
         if user is False:
             # User doesn't exist, so we can create it
             enc_password = sha256_crypt.encrypt(str(password))
-            new_user = cls(name, email, username, enc_password, usertype)
+            new_user = cls(name, email, username, enc_password)
             new_user.save_to_mongo()
             session['username'] = username
             session['logged_in'] = True
@@ -77,13 +69,6 @@ class User(object):
             return True
         else:
             return False
-
-    @classmethod
-    def orgRegister(cls, org_name, org_email, org_address):
-        new_organiser = cls(org_name, org_email, session['username'], org_address)
-        new_organiser.save_org_mongo()
-        flash('Organizer details has been added successfully', 'success')
-        return True
 
     @staticmethod
     def logout():
@@ -115,21 +100,8 @@ class User(object):
             "name": self.name,
             "email": self.email,
             "username": self.username,
-            "password": self.password,
-            "type": self.usertype
-        }
-
-    def json_org(self):
-        return {
-            "_id": self._id,
-            "org_name": self.org_name,
-            "org_email": self.org_email,
-            "username": session['username'],
-            "address": self.address
+            "password": self.password
         }
 
     def save_to_mongo(self):
-        Database.insert("test", self.json())
-
-    def save_org_mongo(self):
-        Database.insert("org", self.json_org())
+        Database.insert("users", self.json()) #use the collection name which is in db always
