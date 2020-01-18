@@ -1,7 +1,9 @@
 from common.database import Database
 from models.blog import Blog
 from models.post import Post
+#importing multiple classes in user model
 from models.user import User, Organizer, Participant
+
 from flask import Flask, render_template, request, session, make_response, redirect, url_for, flash
 from functools import wraps
 
@@ -24,12 +26,12 @@ def login_template():
 def register_template():
     return render_template('register.html')
 
-#organizer registration
+
 @app.route('/register/auth/organizer')
 def org_register_template():
     return render_template('org_register.html')
 
-#participant registration
+
 @app.route('/register/auth/participant')
 def part_register_template():
     return render_template('part_register.html')
@@ -60,16 +62,16 @@ def is_logged_in(f):
         else:
             flash('Unauthorized User, Please login', 'danger')
             return redirect(url_for('login_user'))
-    return wrap   
+    return wrap
 
 
 @app.route('/profile')
 @is_logged_in
 def Profile_of_User():
-    #to display what type of user he is
+    #extract usertype(participant/organizer) from database
     data = Database.find_one("test", {"username": session['username']})
     type = data['type']
-    return render_template("profile.html", type=type)
+    return render_template("profile.html", type = type)
 
 
 @app.route('/logout')
@@ -87,11 +89,12 @@ def register_user():
         username = request.form['username']
         password = request.form['password']
         usertype = request.form['type']
-        #added usertype and redirecting based on uertype
+        #added new field usertype for registering
         if User.register(name, email, username, password, usertype):
             session['username'] = username
             data = Database.find_one("test", {"username": session['username']})
             usrType = data['type']
+            #extract usertype and redirect to corresponding pages
             if usrType == 'Organizer':
                 return redirect(url_for('orgReg'))
             elif usrType == 'Participant':
@@ -102,7 +105,8 @@ def register_user():
         session['username'] = None
     return redirect(url_for('register_template'))
 
-#organizer register
+
+#organizer details saving to db
 @app.route('/auth/register/organizer', methods=['GET', 'POST'])
 def orgReg():
     if request.method == 'POST':
@@ -113,13 +117,16 @@ def orgReg():
             return redirect(url_for('Profile_of_User'))
     return redirect(url_for('org_register_template'))
 
-#participant register
+
+#participant details saving to db
 @app.route('/auth/register/participant', methods=['GET', 'POST'])
 def partReg():
     if request.method == 'POST':
-        preference = request.form['preference']
+        preference1 = request.form['preference1']
+        preference2 = request.form['preference2']
+        preference3 = request.form['preference3']
         address = request.form['address']
-        if Participant.partRegister(preference, address):
+        if Participant.partRegister(preference1, preference2, preference3, address):
             return redirect(url_for('Profile_of_User'))
     return redirect(url_for('part_register_template'))
 
