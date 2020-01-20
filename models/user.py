@@ -143,17 +143,18 @@ class Organizer(object):
 
 #create participant collection and add following fields
 class Participant(object):
-    def __init__(self, preference1, preference2, preference3, part_username, address, _id=None):
+    def __init__(self, preference1, preference2, preference3, part_username, state, city, _id=None):
         self.preference1 = preference1
         self.preference2 = preference2
         self.preference3 = preference3
         self.part_username = part_username
-        self.address = address
+        self.state = state
+        self.city = city
         self._id = uuid.uuid4().hex if _id is None else _id
 
     @classmethod
-    def partRegister(cls, preference1, preference2, preference3, address):
-        new_participant = cls(preference1, preference2, preference3, session['username'], address)
+    def partRegister(cls, preference1, preference2, preference3, state, city):
+        new_participant = cls(preference1, preference2, preference3, session['username'], state, city)
         new_participant.save_part_mongo()
         flash('Participant details has been added successfully', 'success')
         return True
@@ -165,7 +166,8 @@ class Participant(object):
             "preference2": self.preference2,
             "preference3": self.preference3,
             "username": session['username'],
-            "address": self.address
+            "state": self.state,
+            "city": self.city
         }
 
     def save_part_mongo(self):
