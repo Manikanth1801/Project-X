@@ -17,6 +17,7 @@
           <ul class="nav navbar-nav navbar-right">
             {% if session.logged_in %}
               <li><a href="/profile">Dashboard</a></li>
+              <li><a href="/account">{{session.username}}</a></li>
               <li><a href="/logout">Logout</a></li>
             {% else %}
               <li><a href="/register">Register</a></li>
