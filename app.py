@@ -2,7 +2,9 @@ from common.database import Database
 from models.blog import Blog
 from models.post import Post
 #importing multiple classes in user model
-from models.user import User, Organizer, Participant
+from models.user import User 
+from models.participant import Participant
+from models.organiser import Organizer
 
 from flask import Flask, render_template, request, session, make_response, redirect, url_for, flash
 from functools import wraps
