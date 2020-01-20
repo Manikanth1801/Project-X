@@ -125,8 +125,9 @@ def partReg():
         preference1 = request.form['preference1']
         preference2 = request.form['preference2']
         preference3 = request.form['preference3']
-        address = request.form['address']
-        if Participant.partRegister(preference1, preference2, preference3, address):
+        state = request.form['stt']
+        city = request.form['sttt']
+        if Participant.partRegister(preference1, preference2, preference3, state, city):
             return redirect(url_for('Profile_of_User'))
     return redirect(url_for('part_register_template'))
 
