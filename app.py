@@ -134,6 +134,13 @@ def partReg():
     return redirect(url_for('part_register_template'))
 
 
+'''
+It is to design update, delete feature of the user after login. e.g. Updating Password, preferences and all
+@app.route('/account', methods=['GET']
+def acc_details():
+'''
+           
+
 # @app.route('/blogs/<string:user_id>')
 # @app.route('/blogs')
 # def user_blogs(user_id=None):
