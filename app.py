@@ -111,9 +111,13 @@ def register_user():
 def orgReg():
     if request.method == 'POST':
         org_name = request.form['org_name']
-        org_email = request.form['org_email']
-        address = request.form['address']
-        if Organizer.orgRegister(org_name, org_email, address):
+        address1 = request.form['address1']
+        address2 = request.form['address2']
+        state = request.form['stt']
+        city = request.form['sttt']
+        pin = request.form['pin']
+        org_phone = request.form['org_phone']
+        if Organizer.orgRegister(org_name, address1, address2, state, city, pin, org_phone):
             return redirect(url_for('Profile_of_User'))
     return redirect(url_for('org_register_template'))
 
