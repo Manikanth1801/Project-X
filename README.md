@@ -1,2 +1,2 @@
 # Project-X
-Small Project.
+Small Project
