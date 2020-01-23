@@ -18,6 +18,11 @@
             {% if session.logged_in %}
               <li><a href="/profile">Dashboard</a></li>
                 <li><a href="/account">{{session.username}}</a></li>
+=======
+              <li><a href="/account">{{session.username}}</a> 
+                  <!-- Add Icon for the Profile section-->
+                </li>
+
               <li><a href="/logout">Logout</a></li>
             {% else %}
               <li><a href="/register">Register</a></li>

@@ -2,7 +2,9 @@ from common.database import Database
 from models.blog import Blog
 from models.post import Post
 #importing multiple classes in user model
-from models.user import User, Organizer, Participant
+from models.user import User 
+from models.participant import Participant
+from models.organiser import Organizer
 
 from flask import Flask, render_template, request, session, make_response, redirect, url_for, flash
 from functools import wraps
@@ -135,6 +137,13 @@ def partReg():
             return redirect(url_for('Profile_of_User'))
     return redirect(url_for('part_register_template'))
 
+
+'''
+It is to design update, delete feature of the user after login. e.g. Updating Password, preferences and all
+@app.route('/account', methods=['GET', 'POST', 'PUT', 'DELETE']
+def acc_details():
+'''
+           
 
 # @app.route('/blogs/<string:user_id>')
 # @app.route('/blogs')

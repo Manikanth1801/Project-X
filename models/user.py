@@ -112,7 +112,7 @@ class User(object):
         Database.insert("test", self.json())
 
 
-#add following fields in your db for organizer
+'''#add following fields in your db for organizer
 class Organizer(object):
         def __init__(self, org_name, address1, address2, state, city, pin, org_phone, org_username, _id=None):
         self.org_name = org_name
@@ -179,4 +179,4 @@ class Participant(object):
         }
 
     def save_part_mongo(self):
-        Database.insert("part", self.json_part())
+        Database.insert("part", self.json_part())'''
