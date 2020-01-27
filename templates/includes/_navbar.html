@@ -19,7 +19,16 @@
               <li><a href="/profile">Dashboard</a></li>
                 
 
-              <li><span class="glyphicon glyphicon-user">{{session.username}}</span>
+              <li><div class="dropdown">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                           <span class="glyphicon glyphicon-user">{{session.username}}</span> </button>
+                         <div class="dropdown-menu">
+                              <a class="dropdown-item" href="#">Change Username</a>
+                              <a class="dropdown-item" href="#">change Password</a>
+                                    <a class="dropdown-item-text" href="#">Add Credit Card</a>
+                              <!-- <span class="dropdown-item-text">Just Text</span>-->
+                            </div>
+                           </div>
                   <!-- Add Icon for the Profile section-->
                     
                 </li>
