@@ -147,27 +147,28 @@ def acc_details():
 
 '''
 
-@app.route('/create_event', methods=['POST'])
+@app.route('/create_event', methods=['POST', 'GET'])
 def create_event():
-    username = session['username']
-    title = request.form['title']
-    description = request.form['description']
-    banner_image = request.form['banner_image']
-    address_line1 = request.form['address_line1']
-    address_line2 = request.form['address_line2']
-    city = request.form['sttt']
-    state = request.form['stt']
-    country = request.form['country']
-    terms_and_condition = request.form['terms_and_condition']
-    event_category = request.form['event_category']
-    event_date = request.form['event_date']
-    event_time = request.form['event_time']
-    contact_no = request.form['contact_no']
-    email = request.form['email']
-    ticket_price = request.form['ticket_price']
-    
-    if Event.create_event(username, title, description, banner_image, address_line1, address_line2, city, state, country, terms_and_condition, event_category, event_date, event_time, contact_no, email, ticket_price):
-        return redirect(url_for('Profile_of_User'))
+    if request.method=='POST':
+        username = session['username']
+        title = request.form['title']
+        description = request.form['description']
+        banner_image = request.form['banner_image']
+        address_line1 = request.form['address_line1']
+        address_line2 = request.form['address_line2']
+        city = request.form['sttt']
+        state = request.form['stt']
+        country = request.form['country']
+        terms_and_condition = request.form['terms_and_condition']
+        event_category = request.form['event_category']
+        event_date = request.form['event_date']
+        event_time = request.form['event_time']
+        contact_no = request.form['contact_no']
+        email = request.form['email']
+        ticket_price = request.form['ticket_price']
+
+        if Event.create_event(username, title, description, banner_image, address_line1, address_line2, city, state, country, terms_and_condition, event_category, event_date, event_time, contact_no, email, ticket_price):
+            return redirect(url_for('Profile_of_User'))
     return redirect(url_for('create_event'))
            
 
