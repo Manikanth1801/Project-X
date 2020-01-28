@@ -149,7 +149,7 @@ def acc_details():
 
 @app.route('/create_event', methods=['POST'])
 def create_event():
-    #username = session['username']
+    username = session['username']
     title = request.form['title']
     description = request.form['description']
     banner_image = request.form['banner_image']
@@ -166,7 +166,7 @@ def create_event():
     email = request.form['email']
     ticket_price = request.form['ticket_price']
     
-    if Event.create_event(title, description, banner_image, address_line1, address_line2, city, state, country, terms_and_condition, event_category, event_date, event_time, contact_no, email, ticket_price):
+    if Event.create_event(username, title, description, banner_image, address_line1, address_line2, city, state, country, terms_and_condition, event_category, event_date, event_time, contact_no, email, ticket_price):
         return redirect(url_for('Profile_of_User'))
     return redirect(url_for('create_event'))
            
