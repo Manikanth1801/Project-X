@@ -39,14 +39,17 @@ def org_register_template():
 def part_register_template():
     return render_template('part_register.html')
 
-@app.route('/create_eve')
-def create_eve():
+
+@app.route('/create_event')
+def create_event_template():
+    return render_template('create_event.html')
+    
+    
     ''' 
     event_log=[]
     for events in collection_name:
             event_log.append(fetch fn of mongo db)
             '''
-    return render_template('create_event.html')
 
 
 @app.before_first_request
@@ -83,7 +86,7 @@ def Profile_of_User():
     #extract usertype(participant/organizer) from database
     data = Database.find_one("test", {"username": session['username']})
     type = data['type']
-    return render_template("profile.html", type = type, data=data)
+    return render_template("profile.html", type = type)
 
 
 @app.route('/logout')
@@ -156,15 +159,14 @@ def acc_details():
 
 '''
 
-@app.route('/create_eve', methods=['GET', 'POST'])
+@app.route('/create_eve', methods = ['GET', 'POST'])
 def create_event():
     if request.method == 'POST':
-        username = session['username']
         title = request.form['title']
         description = request.form['description']
         banner_image = request.form['banner_image']
-        address_line1 = request.form['address_line1']
-        address_line2 = request.form['address_line2']
+        address_line1 = request.form['address1']
+        address_line2 = request.form['address2']
         city = request.form['sttt']
         state = request.form['stt']
         country = request.form['country']
@@ -175,10 +177,9 @@ def create_event():
         contact_no = request.form['contact_no']
         email = request.form['email']
         ticket_price = request.form['ticket_price']
-
-        if Event.create_event(username, title, description, banner_image, address_line1, address_line2, city, state, country, terms_and_condition, event_category, event_date, event_time, contact_no, email, ticket_price):
+        if Event.createEvent(title, description, banner_image, address_line1, address_line2, city, state, country, terms_and_condition, event_category, event_date, event_time, contact_no, email, ticket_price):
             return redirect(url_for('Profile_of_User'))
-    return redirect(url_for('create_event'))
+    return redirect(url_for('create_event_template'))
            
 
 # @app.route('/blogs/<string:user_id>')
