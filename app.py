@@ -5,6 +5,7 @@ from models.post import Post
 from models.user import User 
 from models.participant import Participant
 from models.organiser import Organizer
+from models.events import Event
 
 from flask import Flask, render_template, request, session, make_response, redirect, url_for, flash
 from functools import wraps
@@ -37,6 +38,15 @@ def org_register_template():
 @app.route('/register/auth/participant')
 def part_register_template():
     return render_template('part_register.html')
+
+@app.route('/create_eve')
+def create_eve():
+    ''' 
+    event_log=[]
+    for events in collection_name:
+            event_log.append(fetch fn of mongo db)
+            '''
+    return render_template('create_event.html')
 
 
 @app.before_first_request
@@ -73,7 +83,7 @@ def Profile_of_User():
     #extract usertype(participant/organizer) from database
     data = Database.find_one("test", {"username": session['username']})
     type = data['type']
-    return render_template("profile.html", type = type)
+    return render_template("profile.html", type = type, data=data)
 
 
 @app.route('/logout')
@@ -135,6 +145,7 @@ def partReg():
         city = request.form['sttt']
         if Participant.partRegister(preference1, preference2, preference3, state, city):
             return redirect(url_for('Profile_of_User'))
+    
     return redirect(url_for('part_register_template'))
 
 
@@ -142,7 +153,32 @@ def partReg():
 It is to design update, delete feature of the user after login. e.g. Updating Password, preferences and all
 @app.route('/account', methods=['GET', 'POST', 'PUT', 'DELETE']
 def acc_details():
+
 '''
+
+@app.route('/create_eve', methods=['GET', 'POST'])
+def create_event():
+    if request.method == 'POST':
+        username = session['username']
+        title = request.form['title']
+        description = request.form['description']
+        banner_image = request.form['banner_image']
+        address_line1 = request.form['address_line1']
+        address_line2 = request.form['address_line2']
+        city = request.form['sttt']
+        state = request.form['stt']
+        country = request.form['country']
+        terms_and_condition = request.form['terms_and_condition']
+        event_category = request.form['event_category']
+        event_date = request.form['event_date']
+        event_time = request.form['event_time']
+        contact_no = request.form['contact_no']
+        email = request.form['email']
+        ticket_price = request.form['ticket_price']
+
+        if Event.create_event(username, title, description, banner_image, address_line1, address_line2, city, state, country, terms_and_condition, event_category, event_date, event_time, contact_no, email, ticket_price):
+            return redirect(url_for('Profile_of_User'))
+    return redirect(url_for('create_event'))
            
 
 # @app.route('/blogs/<string:user_id>')

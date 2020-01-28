@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<script src="{{url_for('static', filename='js/cities.js')}}"></script>
+{% endblock %}
+
+{% block body %}
+<h1>Create Your event <small> Welcome {{session.username}}</small></h1>
+<hr>
+<div class="container page-form">
+    <form id="login-form" action="/create_eve" method="post">
+        <div class="form-group">
+            <label for="title">Event Title</label>
+            <input type="text" id="title" class="form-control" name="title" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <input type="text" id="description" class="form-control" name="description" required>
+        </div>
+        <div class="form-group">
+            <label for="banner_image">Uploead Banner Image</label>
+            <input type="text" id="banner_image" class="form-control" name="banner_image" required>
+        </div>
+        <div class="form-group">
+            <label for="address1">Address Line 1</label>
+            <input type="text" id="address1" class="form-control" name="address1" placeholder="Street Address" required>
+        </div>
+        <div class="form-group">
+            <label for="address2">Address Line 2(Optional)</label>
+            <input type="text" id="address2" class="form-control" name="address2" placeholder="Apartment, Building, Floor, etc.">
+        </div>
+        <div class="form-group">
+            <label for="sts">Location</label>
+            <select onchange="print_city('state', this.selectedIndex);" id="sts" name ="stt" class="form-control" required></select>
+            <select id ="state" class="form-control" name="sttt" required></select>
+            <script language="javascript">print_state("sts");</script>
+        </div>
+        <div class="form-group">
+            <label for="country">Country</label>
+            <input type="text" id="country" class="form-control" name="country" required>
+        </div>
+        <!--<div class="form-group">
+            <label for="pin">Pin</label>
+            <input type="text" id="pin" class="form-control" name="pin" required>
+        </div>-->
+        <div class="form-group">
+            <label for="terms_and_condition">Terms And Condition</label>
+            <input type="text" id="terms_and_condition" class="form-control" name="terms_and_condition" required>
+        </div>
+        <div class="form-group">
+            <label for="event_category">Event Category</label>
+            <input type="text" id="event_category" class="form-control" name="event_category" required>
+        </div>
+        <div class="form-group">
+            <label for="event_time">Event time</label>
+            <input type="time" id="event_time" class="form-control" name="event_time" required>
+        </div>
+        <div class="form-group">
+            <label for="event_date">Event Date</label>
+            <input type="date" id="event_date" class="form-control" name="event_date" required>
+        </div>
+        <div class="form-group">
+            <label for="contact_no">Phone</label>
+            <input type="text" id="contact_no" class="form-control" name="contact_no" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" class="form-control" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="ticket_price">Ticket Price</label>
+            <input type="text" id="ticket_price" class="form-control" name="ticket_price" required>
+        </div>
+        <button type="submit" class="btn btn-success">Submit</button>
+    </form>
+</div>
+{% endblock %}

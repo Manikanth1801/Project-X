@@ -17,10 +17,20 @@
           <ul class="nav navbar-nav navbar-right">
             {% if session.logged_in %}
               <li><a href="/profile">Dashboard</a></li>
-                <li><a href="/account">{{session.username}}</a></li>
-=======
-              <li><a href="/account">{{session.username}}</a> 
+                <li><a href="/create_eve">Create Event</a></li>
+
+              <li><div class="dropdown">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                           <span class="glyphicon glyphicon-user">{{session.username}}</span> </button>
+                         <div class="dropdown-menu">
+                              <a class="dropdown-item" href="#">Change Username</a>
+                              <a class="dropdown-item" href="#">change Password</a>
+                                    <a class="dropdown-item-text" href="#">Add Credit Card</a>
+                              <!-- <span class="dropdown-item-text">Just Text</span>-->
+                            </div>
+                           </div>
                   <!-- Add Icon for the Profile section-->
+                    
                 </li>
 
               <li><a href="/logout">Logout</a></li>
