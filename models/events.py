@@ -39,21 +39,21 @@ class Event(object):
 def json_event(self):
         return {
             "_id": self._id,
-            "username" = self.username
-            "title" = self.title
-            "description"= self.description
-            "banner_image"= self.banner_image
-            "address_line1"= self.address_line1
-            "address_line2" = self.address_line2
-            "city"= self.city
-            "state"= self.state
-            "country"= self.country
-            "terms_and_condition"= self.terms_and_condition
-            "event_category"= self.event_category
-            "event_date"= self.event_date
-            "event_time"= self.event_time
-            "contact_no"= self.contact_no
-            "email"= self.email
+            "username" = self.username,
+            "title" = self.title,
+            "description"= self.description,
+            "banner_image"= self.banner_image,
+            "address_line1"= self.address_line1,
+            "address_line2" = self.address_line2,
+            "city"= self.city,
+            "state"= self.state,
+            "country"= self.country,
+            "terms_and_condition"= self.terms_and_condition,
+            "event_category"= self.event_category,
+            "event_date"= self.event_date,
+            "event_time"= self.event_time,
+            "contact_no"= self.contact_no,
+            "email"= self.email,
             "ticket_price"= self.ticket_price        
         }
 
