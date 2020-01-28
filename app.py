@@ -39,6 +39,10 @@ def org_register_template():
 def part_register_template():
     return render_template('part_register.html')
 
+@app.route('/create_eve')
+def create_eve():
+    return render_template('create_event.html')
+
 
 @app.before_first_request
 def initialize_database():
@@ -169,7 +173,7 @@ def create_event():
 
         if Event.create_event(username, title, description, banner_image, address_line1, address_line2, city, state, country, terms_and_condition, event_category, event_date, event_time, contact_no, email, ticket_price):
             return redirect(url_for('Profile_of_User'))
-    return render_template('create_event.html')
+    return redirect(url_for('create_event'))
            
 
 # @app.route('/blogs/<string:user_id>')
