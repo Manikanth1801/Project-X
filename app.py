@@ -147,7 +147,7 @@ def acc_details():
 
 '''
 
-@app.route('/create_event', methods=['GET', 'POST'])
+@app.route('/create_eve', methods=['GET', 'POST'])
 def create_event():
     if request.method == 'POST':
         username = session['username']
