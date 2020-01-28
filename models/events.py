@@ -36,7 +36,7 @@ class Event(object):
 
 
 
-def json_event(self):
+    def json_event(self):
         return {
             "_id": self._id,
             "username" = self.username,
