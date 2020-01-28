@@ -41,6 +41,11 @@ def part_register_template():
 
 @app.route('/create_eve')
 def create_eve():
+    ''' 
+    event_log=[]
+    for events in collection_name:
+            event_log.append(fetch fn of mongo db)
+            '''
     return render_template('create_event.html')
 
 
