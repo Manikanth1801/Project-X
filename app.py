@@ -169,7 +169,7 @@ def create_event():
 
         if Event.create_event(username, title, description, banner_image, address_line1, address_line2, city, state, country, terms_and_condition, event_category, event_date, event_time, contact_no, email, ticket_price):
             return redirect(url_for('Profile_of_User'))
-    return redirect(url_for('create_event'))
+    return render_template('create_event.html')
            
 
 # @app.route('/blogs/<string:user_id>')
