@@ -9,4 +9,25 @@
       <a href="/login" class="btn btn-success btn-lg">Login</a>
     {% endif %}
   </div>
+<div>
+  <table class="table table-striped">
+    <tr>
+      <th>Event Title</th>
+      <th>Description</th>
+      <th>Event Category</th>
+      <th>Event Date</th>
+      <th></th>
+      <th></th>
+    </tr>
+    {% for event in events %}
+     	      <tr>
+        <td>{{event.id}}</td>	
+        	        <td>{{event.title}}</td>
+        	        <td>{{event.description}}</td>
+                <td>{{event.ticket_price}}</td>
+        <td>{{event.event_date}}</td>
+      </tr>	      
+    {% endfor %}
+  </table>
+</div>
 {% endblock %}s
