@@ -81,8 +81,8 @@ def is_logged_in(f):
 @is_logged_in
 def Profile_of_User():
     #extract usertype(participant/organizer) from database
-    data = Database.find_one("part", {"username": session['username']})
-    type = Database.find_one("test", {"username": session['username']})['type']
+    data = Database.find_one("test", {"username": session['username']})
+    type = data['type']
     return render_template("profile.html", type = type, data=data)
 
 
