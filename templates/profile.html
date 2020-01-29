@@ -13,12 +13,13 @@
       <th></th>
     </tr>
     {% for article in data %}
-      <tr>
-        <td>{{article.username}}</td>
-        <td>{{article.password}}</td>
-        <td>{{article.preference1}}</td>
-        <td>{{article.state}}</td>
-      </tr>
+     	      <tr>
+        <td>{{article.id}}</td>	
+        	        <td>{{article.title}}</td>
+        	        <td>{{article.description}}</td>
+                <td>{{article.ticket_price}}</td>
+        <td>{{article.event_date}}</td>
+      </tr>	      
     {% endfor %}
   </table>
 {% endblock %}
