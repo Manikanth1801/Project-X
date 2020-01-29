@@ -17,7 +17,7 @@ app.secret_key = 'siva123'
 
 @app.route('/')
 def home_template():
-    event_log= Database.find("event", "")
+    event_log= Database.find("event", {""})
     '''for events in :
         event_log.append(events)'''
     return render_template('home.html', events=event_log)
