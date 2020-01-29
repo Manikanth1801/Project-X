@@ -22,18 +22,25 @@
               <li><div class="dropdown">
                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
                            <span class="glyphicon glyphicon-user">{{session.username}}</span> </button>
-                         <div class="dropdown-menu">
-                              <a class="dropdown-item" href="#">Change Username</a>
+                         <!--div class="dropdown-menu">
+                              <a class="Action" href="#">Change Username</a>
                               <a class="dropdown-item" href="#">change Password</a>
-                                    <a class="dropdown-item-text" href="#">Add Credit Card</a>
-                              <!-- <span class="dropdown-item-text">Just Text</span>-->
-                            </div>
+                              <a class="dropdown-item" href="#">Add Credit Card</a>
+                              <a class="dropdown-item" href="/logout">Logout</a>
+                              <span class="dropdown-item-text">Just Text</span>
+                            </div-->
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <li><a href="#">Change Username</a></li>
+                            <li><a href="#">Change Password</a></li>
+                            <li><a href="#">Add Credit Card</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="/logout">Logout</a></li>
+                            </ul>
                            </div>
                   <!-- Add Icon for the Profile section-->
                     
                 </li>
 
-              <li><a href="/logout">Logout</a></li>
             {% else %}
               <li><a href="/register">Register</a></li>
               <li><a href="/login">Login</a></li>
