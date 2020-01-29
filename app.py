@@ -17,7 +17,10 @@ app.secret_key = 'siva123'
 
 @app.route('/')
 def home_template():
-    return render_template('home.html')
+    event_log= Database.find("event", "")
+    '''for events in :
+        event_log.append(events)'''
+    return render_template('home.html', events=event_log)
 
 
 @app.route('/login')
@@ -43,13 +46,7 @@ def part_register_template():
 @app.route('/create_event')
 def create_event_template():
     return render_template('create_event.html')
-    
-    
-    ''' 
-    event_log=[]
-    for events in collection_name:
-            event_log.append(fetch fn of mongo db)
-            '''
+            
 
 
 @app.before_first_request
