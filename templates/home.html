@@ -1,10 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Web Blog</title>
-</head>
-<body>
-There's nothing here yet! Use the /login or /register endpoints.
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block body %}
+  <div class="jumbotron text-center">
+    <h1>Welcome To ProjectX</h1>
+    <p class="lead">This is a sample front page</p>
+    {% if session.logged_in == NULL %}
+      <a href="/register" class="btn btn-primary btn-lg">Register</a>
+      <a href="/login" class="btn btn-success btn-lg">Login</a>
+    {% endif %}
+  </div>
+<div>
+  <table class="table table-striped">
+    <tr>
+      <th>Event Title</th>
+      <th>Description</th>
+      <th>Event Category</th>
+      <th>Event Date</th>
+      <th></th>
+      <th></th>
+    </tr>
+    {% for event in events %}
+     	      <tr>
+        
+        	        <td>{{event.title}}</td>
+        	        <td>{{event.description}}</td>
+                <td>{{event.ticket_price}}</td>
+        <td>{{event.event_date}}</td>
+      </tr>	      
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}s

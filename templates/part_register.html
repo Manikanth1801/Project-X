@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<script src="{{url_for('static', filename='js/cities.js')}}"></script>
+{% endblock %}
+
+{% block body %}
+  <h1>Participant Registration <small> Welcome {{session.username}}</small></h1>
+  <hr>
+  <div class="container page-form">
+    <form id="login-form" action="/auth/register/participant" method="post">
+        <div class="form-group">
+            <label for="preference1">First Preference</label>
+            <select class="form-control" id="preference1" name="preference1" required>
+                <option value="Dance">Dance</option>
+                <option value="Swim">Swim</option>
+                <option value="Cricket">Cricket</option>
+                <option value="Football">Football</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="preference1">Second Preference</label>
+            <select class="form-control" id="preference2" name="preference2" required>
+                <option value="Dance">Dance</option>
+                <option value="Swim">Swim</option>
+                <option value="Cricket">Cricket</option>
+                <option value="Football">Football</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="preference1">Third Preference</label>
+            <select class="form-control" id="preference3" name="preference3" required>
+                <option value="Dance">Dance</option>
+                <option value="Swim">Swim</option>
+                <option value="Cricket">Cricket</option>
+                <option value="Football">Football</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="sts">Location</label>
+            <select onchange="print_city('state', this.selectedIndex);" id="sts" name ="stt" class="form-control" required></select>
+            <select id ="state" class="form-control" name="sttt" required></select>
+            <script language="javascript">print_state("sts");</script>
+        </div>
+        <button type="submit" class="btn btn-success">Submit</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,4 +1,25 @@
-{% extends "base.html" %}
-{% block content %}
-    <h1>Hello {{ email }}</h1>
+{% extends 'base.html' %}
+
+{% block body %}
+  <h1>Dashboard <small> Welcome {{session.username}}, {{type}}</small></h1>
+  <hr>
+  <table class="table table-striped">
+    <tr>
+      <th>Event Title</th>
+      <th>Description</th>
+      <th>Event Category</th>
+      <th>Event Date</th>
+      <th></th>
+      <th></th>
+    </tr>
+    {% for article in data %}
+     	      <tr>
+        <td>{{article.id}}</td>	
+        	        <td>{{article.title}}</td>
+        	        <td>{{article.description}}</td>
+                <td>{{article.ticket_price}}</td>
+        <td>{{article.event_date}}</td>
+      </tr>	      
+    {% endfor %}
+  </table>
 {% endblock %}
