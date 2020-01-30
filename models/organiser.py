@@ -10,16 +10,20 @@ from models.blog import Blog
 
 #add following fields in your db for organizer
 class Organizer(object):
-    def __init__(self, org_name, org_email, org_username, address, _id=None):
+    def __init__(self, org_name, address1, address2, state, city, pin, org_phone, org_username, _id=None):
         self.org_name = org_name
-        self.org_email = org_email
+        self.address1 = address1
+        self.address2 = address2
+        self.state = state
+        self.city = city
+        self.pin = pin
+        self.org_phone = org_phone
         self.org_username = org_username
-        self.address = address
         self._id = uuid.uuid4().hex if _id is None else _id
 
     @classmethod
-    def orgRegister(cls, org_name, org_email, org_address):
-        new_organiser = cls(org_name, org_email, session['username'], org_address)
+    def orgRegister(cls, org_name, address1, address2, state, city, pin, org_phone):
+        new_organiser = cls(org_name, address1, address2, state, city, pin, org_phone, session['username'])
         new_organiser.save_org_mongo()
         flash('Organizer details has been added successfully', 'success')
         return True
@@ -28,9 +32,13 @@ class Organizer(object):
         return {
             "_id": self._id,
             "org_name": self.org_name,
-            "org_email": self.org_email,
-            "username": session['username'],
-            "address": self.address
+            "address1": self.address1,
+            "address2": self.address2,
+            "state": self.state,
+            "city": self.city,
+            "pin": self.pin,
+            "org_phone": self.org_phone,
+            "username": session['username']
         }
 
     def save_org_mongo(self):
