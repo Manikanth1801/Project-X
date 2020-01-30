@@ -21,11 +21,12 @@ class User(object):
     def get_by_email(cls, email, username):
         #check either email or username exits in the database
         data1 = Database.find_one("test", {"email": email})
-        data2 = Database.find_one("test", {"username": username})
         if data1 is not None:
-            return cls(**data1)
-        elif data2 is not None:
-            return cls(**data2)
+            return True
+        else:
+            data2 = Database.find_one("test", {"username": username})
+            if data2 is not None:
+                return True
         return False
 
     @classmethod
