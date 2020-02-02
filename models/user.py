@@ -9,7 +9,7 @@ from models.blog import Blog
 
 #added usertype
 class User(object):
-    def __init__(self, name, email, username, password, usertype, _id=None):
+    def __init__(self, name, email, username, password, usertype, nuname, _id=None):
         self.name = name
         self.email = email
         self.username = username
@@ -74,6 +74,12 @@ class User(object):
             return True
         else:
             return False
+        
+    @classmethod
+    def up_uname(nuname):
+        new_username = nuname
+        new_username.update_to_mongo()
+        return True
 
     @staticmethod
     def logout():
@@ -108,9 +114,27 @@ class User(object):
             "password": self.password,
             "type": self.usertype
         }
+    
+    def previous_uname(self):
+        return {
+            "username": self.username
+            
+        }
+    def new_uname(self):
+        return {
+            $set{
+                "username": self.username
+            }
+            
+        }
 
     def save_to_mongo(self):
         Database.insert("test", self.json())
+        
+    
+        
+    def update_to_mongo(self):
+        Database.update("test", self.previous_uname(), self.new_uname())
 
 
 '''#add following fields in your db for organizer
