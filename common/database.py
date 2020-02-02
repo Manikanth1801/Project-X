@@ -14,7 +14,7 @@ class Database(object):
         
     @staticmethod
     def update(collection, old_val, new_val):
-        Database.DATABASE[collection].update(old_val, new_val)
+        Database.DATABASE[collection].update(old_val, {$set:{new_val}})
 
 
     @staticmethod
