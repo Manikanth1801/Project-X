@@ -27,6 +27,10 @@ def home_template():
 def login_template():
     return render_template('login.html')
 
+@app.route('/ch-uname')
+def ch_uname_template():
+    return render_template('username.html')
+
 
 @app.route('/register')
 def register_template():
