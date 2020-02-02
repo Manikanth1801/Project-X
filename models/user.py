@@ -122,8 +122,8 @@ class User(object):
         }
     def new_uname(self):
         return {
-            $set{
-                "username": self.username
+            $set:{
+                "username": self.nuname
             }
             
         }
