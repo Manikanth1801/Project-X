@@ -1,0 +1,23 @@
+
+{% extends 'base.html' %}
+
+{% block body %}
+<h1>Change UserName</h1>
+<div class="container page-form">
+    <form id="ch-uname-form" action="/auth/ch-uname" method="post">
+        <div class="form-group">
+            <label for="puname">Previous Username</label>
+            <input type="text" id="puname" class="form-control" name="puname" required>
+        </div>
+        <div class="form-group">
+            <label for="nuname">New Username</label>
+            <input type="text" id="nuname" class="form-control" name="nuname" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" class="form-control" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-success">Submit</button>
+    </form>
+</div>
+{% endblock %}
