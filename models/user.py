@@ -122,10 +122,7 @@ class User(object):
         }
     def new_uname(self):
         return {
-            $set:{
-                "username": self.nuname
-            }
-            
+            "username": self.nuname            
         }
 
     def save_to_mongo(self):
