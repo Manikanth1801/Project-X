@@ -153,7 +153,7 @@ def partReg():
 It is to design update, delete feature of the user after login. e.g. Updating Password, preferences and all
 @app.route('/account', methods=['GET', 'POST', 'PUT', 'DELETE']
 def acc_details():
-
+update asap
 '''
 
 @app.route('/create_eve', methods = ['GET', 'POST'])
