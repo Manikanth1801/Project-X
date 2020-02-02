@@ -13,8 +13,8 @@ class Database(object):
         Database.DATABASE[collection].insert(data)
         
     @staticmethod
-    def update(collection, data):
-        Database.DATABASE[collection].update(data)
+    def update(collection, old_val, new_val):
+        Database.DATABASE[collection].update(old_val, new_val)
 
 
     @staticmethod
