@@ -6,6 +6,7 @@ from models.user import User
 from models.participant import Participant
 from models.organiser import Organizer
 from models.events import Event
+from random import randint
 
 from flask import Flask, render_template, request, session, make_response, redirect, url_for, flash
 from functools import wraps
@@ -18,8 +19,6 @@ app.secret_key = 'siva123'
 @app.route('/')
 def home_template():
     event_log= Database.find("event", {})
-    '''for events in :
-        event_log.append(events)'''
     return render_template('home.html', events=event_log)
 
 
