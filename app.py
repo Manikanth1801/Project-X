@@ -80,6 +80,20 @@ def is_logged_in(f):
             return redirect(url_for('login_user'))
     return wrap
 
+@app.route('/auth/ch-uname', methods=['POST', 'GET'])
+def ch_uname():
+    if request.method == 'POST':
+        email = request.form['puname']
+        password = request.form['password']
+        if User.login(puname, password): #for checking correct details
+            #return redirect(url_for('Profile_of_User'))
+            new_uname=request.form['nuname']
+            if User.up_uname(nuname):
+                flash('Username is changed')
+                return redirect(url_for('Profile_of_User'))
+    else:
+        return render_template("username.html")
+
 
 @app.route('/profile')
 @is_logged_in
