@@ -83,11 +83,11 @@ def is_logged_in(f):
 @app.route('/auth/ch-uname', methods=['POST', 'GET'])
 def ch_uname():
     if request.method == 'POST':
-        email = request.form['puname']
+        puname = request.form['puname']
         password = request.form['password']
         if User.login(puname, password): #for checking correct details
             #return redirect(url_for('Profile_of_User'))
-            new_uname=request.form['nuname']
+            nuname=request.form['nuname']
             if User.up_uname(nuname):
                 flash('Username is changed')
                 return redirect(url_for('Profile_of_User'))
