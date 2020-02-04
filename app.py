@@ -88,13 +88,13 @@ def ch_uname():
         puname = request.form['puname']
         password = request.form['password']
         nuname = request.form['nuname']
-        if User.login(puname, password):  # for checking correct details
+        #if User.login(puname, password):  # for checking correct details
             # return redirect(url_for('Profile_of_User'))
 
-            if User.up_uname(nuname, puname):
-                flash('Username is changed')
+        if User.up_uname(nuname, puname, password):
+            #flash('Username is changed')
 
-                return render_template("profile.html")
+            return render_template("profile.html")
     else:
         return render_template("username.html")
 
