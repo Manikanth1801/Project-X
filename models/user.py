@@ -76,11 +76,17 @@ class User(object):
             return False
 
     @staticmethod
-    def up_uname(nuname, puname):
-        new_username = nuname
-        old_username =puname
-        Database.DATABASE["test"].update({"username": old_username}, {"$set":{"username": new_username}})
-        session['username']=new_username
+    def up_uname(nuname, puname, password):
+        data1 = Database.find_one("test", {"username": puname})
+        if data1 is not None:
+            dbPassword = data1['password']
+            if sha256_crypt.verify(password, dbPassword):
+                dbPassword = data1['password']
+                new_username = nuname
+                old_username =puname
+                Database.DATABASE["test"].update({"username": old_username}, {"$set":{"username": new_username}})
+                session['username']=new_username
+                flash("Hi {}, Your Username is Updated".format(new_username))
         return True
 
     @staticmethod
