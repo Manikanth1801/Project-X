@@ -7,7 +7,7 @@ from common.database import Database
 from models.blog import Blog
 
 
-#added usertype
+# added usertype
 class User(object):
     def __init__(self, name, email, username, password, usertype, _id=None):
         self.name = name
@@ -19,7 +19,7 @@ class User(object):
 
     @classmethod
     def get_by_email(cls, email, username):
-        #check either email or username exits in the database
+        # check either email or username exits in the database
         data1 = Database.find_one("test", {"email": email})
         if data1 is not None:
             return True
@@ -70,6 +70,22 @@ class User(object):
             return False
 
     @staticmethod
+    def up_uname(nuname, puname, password):
+        data1 = Database.find_one("test", {"username": puname})
+        if data1 is not None:
+            dbPassword = data1['password']
+            if sha256_crypt.verify(password, dbPassword):
+                dbPassword = data1['password']
+                new_username = nuname
+                old_username =puname
+                Database.DATABASE["test"].update({"username": old_username}, {"$set":{"username": new_username}})
+                session['username']=new_username
+                flash("Hi {}, Your Username is Updated".format(new_username))
+            else:
+                flash("You might have entered wrong Username or Password")
+        return True
+
+    @staticmethod
     def logout():
         session.clear()
         flash('You are now logged out', 'success')
@@ -103,8 +119,22 @@ class User(object):
             "type": self.usertype
         }
 
+    def previous_uname(self):
+        return {
+            "username": self.username
+
+        }
+
+    def new_uname(self):
+        return {
+            "username": self.nuname
+        }
+
     def save_to_mongo(self):
         Database.insert("test", self.json())
+
+    def update_to_mongo(self):
+        Database.update("test", self.previous_uname(), self.new_uname())
 
 
 '''#add following fields in your db for organizer
@@ -119,14 +149,12 @@ class Organizer(object):
         self.org_phone = org_phone
         self.org_username = org_username
         self._id = uuid.uuid4().hex if _id is None else _id
-
     @classmethod
     def orgRegister(cls, org_name, address1, address2, state, city, pin, org_phone):
         new_organiser = cls(org_name, address1, address2, state, city, pin, org_phone, session['username'])
         new_organiser.save_org_mongo()
         flash('Organizer details has been added successfully', 'success')
         return True
-
     def json_org(self):
         return {
             "_id": self._id,
@@ -139,11 +167,9 @@ class Organizer(object):
             "org_phone": self.org_phone,
             "username": session['username']
         }
-    
+
     def save_org_mongo(self):
         Database.insert("org", self.json_org())
-
-
 #create participant collection and add following fields
 class Participant(object):
     def __init__(self, preference1, preference2, preference3, part_username, state, city, _id=None):
@@ -154,14 +180,12 @@ class Participant(object):
         self.state = state
         self.city = city
         self._id = uuid.uuid4().hex if _id is None else _id
-
     @classmethod
     def partRegister(cls, preference1, preference2, preference3, state, city):
         new_participant = cls(preference1, preference2, preference3, session['username'], state, city)
         new_participant.save_part_mongo()
         flash('Participant details has been added successfully', 'success')
         return True
-
     def json_part(self):
         return {
             "_id": self._id,
@@ -172,6 +196,5 @@ class Participant(object):
             "state": self.state,
             "city": self.city
         }
-
     def save_part_mongo(self):
         Database.insert("part", self.json_part())'''
