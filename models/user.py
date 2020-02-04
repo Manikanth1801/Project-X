@@ -114,8 +114,7 @@ class User(object):
             "name": self.name,
             "email": self.email,
             "username": self.username,
-            "password": self.password,
-            "type": self.usertype
+            "password": self.password
         }
 
     def previous_uname(self):
