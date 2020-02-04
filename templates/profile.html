@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block body %}
-  <h1>Dashboard <small> Welcome {{session.username}}, {{type}}</small></h1>
+  <h1>Dashboard <small> Welcome {{session.username}}</small></h1>
   <hr>
   <table class="table table-striped">
     <tr>
@@ -17,7 +17,7 @@
         <td>{{article.id}}</td>	
         	        <td>{{article.title}}</td>
         	        <td>{{article.description}}</td>
-                <td>{{article.ticket_price}}</td>
+                <td>{{article.event_category}}</td>
         <td>{{article.event_date}}</td>
       </tr>	      
     {% endfor %}
