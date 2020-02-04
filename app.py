@@ -1,8 +1,8 @@
 from common.database import Database
 from models.blog import Blog
 from models.post import Post
-#importing multiple classes in user model
-from models.user import User 
+# importing multiple classes in user model
+from models.user import User
 from models.participant import Participant
 from models.organiser import Organizer
 from models.events import Event
@@ -11,20 +11,30 @@ from random import randint
 from flask import Flask, render_template, request, session, make_response, redirect, url_for, flash
 from functools import wraps
 
-
 app = Flask(__name__)
 app.secret_key = 'siva123'
 
 
 @app.route('/')
 def home_template():
+<<<<<<< HEAD
     event_log= Database.find("event", {})
+=======
+    event_log = Database.find("event", {})
+    '''for events in :
+        event_log.append(events)'''
+>>>>>>> master
     return render_template('home.html', events=event_log)
 
 
 @app.route('/login')
 def login_template():
     return render_template('login.html')
+
+
+@app.route('/ch-uname')
+def ch_uname_template():
+    return render_template('username.html')
 
 
 @app.route('/register')
@@ -45,7 +55,6 @@ def part_register_template():
 @app.route('/create_event')
 def create_event_template():
     return render_template('create_event.html')
-            
 
 
 @app.before_first_request
@@ -59,6 +68,7 @@ def login_user():
         email = request.form['email']
         password = request.form['password']
         if User.login(email, password):
+            #flash('You are now logged in', 'success')
             return redirect(url_for('Profile_of_User'))
     else:
         return render_template("login.html")
@@ -73,16 +83,34 @@ def is_logged_in(f):
         else:
             flash('Unauthorized User, Please login', 'danger')
             return redirect(url_for('login_user'))
+
     return wrap
+
+
+@app.route('/auth/ch-uname', methods=['POST', 'GET'])
+def ch_uname():
+    if request.method == 'POST':
+        puname = request.form['puname']
+        password = request.form['password']
+        nuname = request.form['nuname']
+        if User.login(puname, password):  # for checking correct details
+            # return redirect(url_for('Profile_of_User'))
+
+            if User.up_uname(nuname, puname):
+                flash('Username is changed')
+
+                return render_template("profile.html")
+    else:
+        return render_template("username.html")
 
 
 @app.route('/profile')
 @is_logged_in
 def Profile_of_User():
-    #extract usertype(participant/organizer) from database
+    # extract usertype(participant/organizer) from database
     data = Database.find_one("test", {"username": session['username']})
     type = data['type']
-    return render_template("profile.html", type = type)
+    return render_template("profile.html", type=type)
 
 
 @app.route('/logout')
@@ -100,12 +128,12 @@ def register_user():
         username = request.form['username']
         password = request.form['password']
         usertype = request.form['type']
-        #added new field usertype for registering
+        # added new field usertype for registering
         if User.register(name, email, username, password, usertype):
             session['username'] = username
             data = Database.find_one("test", {"username": session['username']})
             usrType = data['type']
-            #extract usertype and redirect to corresponding pages
+            # extract usertype and redirect to corresponding pages
             if usrType == 'Organizer':
                 return redirect(url_for('orgReg'))
             elif usrType == 'Participant':
@@ -117,7 +145,7 @@ def register_user():
     return redirect(url_for('register_template'))
 
 
-#organizer details saving to db
+# organizer details saving to db
 @app.route('/auth/register/organizer', methods=['GET', 'POST'])
 def orgReg():
     if request.method == 'POST':
@@ -133,7 +161,7 @@ def orgReg():
     return redirect(url_for('org_register_template'))
 
 
-#participant details saving to db
+# participant details saving to db
 @app.route('/auth/register/participant', methods=['GET', 'POST'])
 def partReg():
     if request.method == 'POST':
@@ -144,7 +172,7 @@ def partReg():
         city = request.form['sttt']
         if Participant.partRegister(preference1, preference2, preference3, state, city):
             return redirect(url_for('Profile_of_User'))
-    
+
     return redirect(url_for('part_register_template'))
 
 
@@ -152,10 +180,11 @@ def partReg():
 It is to design update, delete feature of the user after login. e.g. Updating Password, preferences and all
 @app.route('/account', methods=['GET', 'POST', 'PUT', 'DELETE']
 def acc_details():
-
+update asap
 '''
 
-@app.route('/create_eve', methods = ['GET', 'POST'])
+
+@app.route('/create_eve', methods=['GET', 'POST'])
 def create_event():
     if request.method == 'POST':
         title = request.form['title']
@@ -173,10 +202,12 @@ def create_event():
         contact_no = request.form['contact_no']
         email = request.form['email']
         ticket_price = request.form['ticket_price']
-        if Event.createEvent(title, description, banner_image, address_line1, address_line2, city, state, country, terms_and_condition, event_category, event_date, event_time, contact_no, email, ticket_price):
+        if Event.createEvent(title, description, banner_image, address_line1, address_line2, city, state, country,
+                             terms_and_condition, event_category, event_date, event_time, contact_no, email,
+                             ticket_price):
             return redirect(url_for('Profile_of_User'))
     return redirect(url_for('create_event_template'))
-           
+
 
 # @app.route('/blogs/<string:user_id>')
 # @app.route('/blogs')
@@ -229,5 +260,5 @@ def create_event():
 #         return make_response(blog_posts(blog_id))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)
