@@ -9,12 +9,11 @@ from models.blog import Blog
 
 # added usertype
 class User(object):
-    def __init__(self, name, email, username, password, usertype, _id=None):
+    def __init__(self, name, email, username, password, _id=None):
         self.name = name
         self.email = email
         self.username = username
         self.password = password
-        self.usertype = usertype
         self._id = uuid.uuid4().hex if _id is None else _id
 
     @classmethod
@@ -55,12 +54,12 @@ class User(object):
             return render_template('login.html')
 
     @classmethod
-    def register(cls, name, email, username, password, usertype):
+    def register(cls, name, email, username, password):
         user = cls.get_by_email(email, username)
         if user is False:
             # User doesn't exist, so we can create it
             enc_password = sha256_crypt.encrypt(str(password))
-            new_user = cls(name, email, username, enc_password, usertype)
+            new_user = cls(name, email, username, enc_password)
             new_user.save_to_mongo()
             session['username'] = username
             session['logged_in'] = True
