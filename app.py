@@ -9,9 +9,15 @@ from models.events import Event
 
 from flask import Flask, render_template, request, session, make_response, redirect, url_for, flash
 from functools import wraps
+from flask_mail import Mail, Message
+from itsdangerous import URLSafeTimedSerializer
 
 app = Flask(__name__)
+app.config.from_pyfile('config.cfg')
 app.secret_key = 'siva123'
+
+
+mail = Mail(app)
 
 
 @app.route('/')
@@ -102,10 +108,7 @@ def ch_uname():
 @app.route('/profile')
 @is_logged_in
 def Profile_of_User():
-    # extract usertype(participant/organizer) from database
-    data = Database.find_one("test", {"username": session['username']})
-    type = data['type']
-    return render_template("profile.html", type=type)
+    return render_template("profile.html")
 
 
 @app.route('/logout')
@@ -115,6 +118,40 @@ def logout_user():
     return render_template('login.html')
 
 
+def generate_confirmation_token(email):
+    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+    return serializer.dumps(email, salt=app.config['SECURITY_PASSWORD_SALT'])
+
+
+def confirm_token(token, expiration=3600):
+    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+    try:
+        email = serializer.loads(token, salt=app.config['SECURITY_PASSWORD_SALT'], max_age=expiration)
+    except:
+        return False
+    return email
+
+
+@app.route('/confirm_email/<token>/<email>')
+@is_logged_in
+def confirm_email(token, email):
+    user = Database.find_one("test", {"email": email})
+    if user['confirmed'] == 'True':
+        flash('Account already confirmed. Please login.', 'success')
+        return redirect(url_for('main.home'))
+    email = confirm_token(token)
+    if user['email'] == email:
+        Database.update_confirm("test", email)
+        flash('You have confirmed your account. Thanks!', 'success')
+    else:
+        flash('The confirmation link is invalid or has expired.', 'danger')
+    return redirect(url_for('home_template'))
+
+
+def send_email(to, subject, template):
+    msg = Message(subject, recipients=[to], html=template, sender=app.config['MAIL_DEFAULT_SENDER'])
+
+
 @app.route('/auth/register', methods=['POST', 'GET'])
 def register_user():
     if request.method == 'POST':
@@ -122,18 +159,17 @@ def register_user():
         email = request.form['email']
         username = request.form['username']
         password = request.form['password']
-        usertype = request.form['type']
         # added new field usertype for registering
-        if User.register(name, email, username, password, usertype):
+        if User.register(name, email, username, password):
             session['username'] = username
-            data = Database.find_one("test", {"username": session['username']})
-            usrType = data['type']
-            # extract usertype and redirect to corresponding pages
-            if usrType == 'Organizer':
-                return redirect(url_for('orgReg'))
-            elif usrType == 'Participant':
-                return redirect(url_for('partReg'))
-
+            token = generate_confirmation_token(email)
+            confirm_url = url_for('confirm_email', token=token, email=email, _external=True)
+            html = render_template('activate.html', confirm_url=confirm_url)
+            subject = "Please confirm your email"
+            send_email(email, subject, html)
+            flash('A confirmation email has been sent via email.', 'success')
+            return redirect(url_for('unconfirmed', email=email))
+    else:
         flash('Either Username or Email is already registered in the system!', 'error')
         # Add a comment saying you are already registered
         session['username'] = None
@@ -154,6 +190,16 @@ def orgReg():
         if Organizer.orgRegister(org_name, address1, address2, state, city, pin, org_phone):
             return redirect(url_for('Profile_of_User'))
     return redirect(url_for('org_register_template'))
+
+
+@app.route('/unconfirmed/<email>')
+@is_logged_in
+def unconfirmed(email):
+    user = Database.find_one("test", {'email': email})
+    if user['confirmed'] == 'True':
+        return redirect(url_for('Profile_of_User'))
+    flash('Please confirm your Email ID!', 'warning')
+    return render_template('unconfirmed.html')
 
 
 # participant details saving to db
