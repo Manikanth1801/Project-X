@@ -9,11 +9,13 @@ from models.blog import Blog
 
 # added usertype
 class User(object):
-    def __init__(self, name, email, username, password, _id=None):
+    def __init__(self, name, email, username, password, confirmed, confirmed_on=None, _id=None):
         self.name = name
         self.email = email
         self.username = username
         self.password = password
+        self.confirmed = confirmed
+        self.confirmed_on = confirmed_on
         self._id = uuid.uuid4().hex if _id is None else _id
 
     @classmethod
@@ -59,7 +61,7 @@ class User(object):
         if user is False:
             # User doesn't exist, so we can create it
             enc_password = sha256_crypt.encrypt(str(password))
-            new_user = cls(name, email, username, enc_password)
+            new_user = cls(name, email, username, enc_password, confirmed='False', confirmed_on='None')
             new_user.save_to_mongo()
             session['username'] = username
             session['logged_in'] = True
@@ -114,7 +116,9 @@ class User(object):
             "name": self.name,
             "email": self.email,
             "username": self.username,
-            "password": self.password
+            "password": self.password,
+            "confirmed": self.confirmed,
+            "confirmed_on": self.confirmed_on
         }
 
     def previous_uname(self):
