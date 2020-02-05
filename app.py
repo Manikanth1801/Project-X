@@ -11,6 +11,8 @@ from flask import Flask, render_template, request, session, make_response, redir
 from functools import wraps
 from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 
 app = Flask(__name__)
 app.config.from_pyfile('config.cfg')
@@ -138,7 +140,7 @@ def confirm_email(token, email):
     user = Database.find_one("test", {"email": email})
     if user['confirmed'] == 'True':
         flash('Account already confirmed. Please login.', 'success')
-        return redirect(url_for('main.home'))
+        return redirect(url_for('home_template'))
     email = confirm_token(token)
     if user['email'] == email:
         Database.update_confirm("test", email)
@@ -149,7 +151,9 @@ def confirm_email(token, email):
 
 
 def send_email(to, subject, template):
-    msg = Message(subject, recipients=[to], html=template, sender=app.config['MAIL_DEFAULT_SENDER'])
+    message = Mail(from_email=app.config['MAIL_DEFAULT_SENDER'], to_emails=[to], subject=subject, html_content=template)
+    sg = SendGridAPIClient(app.config['SENDGRID_API_KEY'])
+    sg.send(message)
 
 
 @app.route('/auth/register', methods=['POST', 'GET'])
@@ -159,7 +163,7 @@ def register_user():
         email = request.form['email']
         username = request.form['username']
         password = request.form['password']
-        # added new field usertype for registering
+        #added new field usertype for registering
         if User.register(name, email, username, password):
             session['username'] = username
             token = generate_confirmation_token(email)
@@ -170,7 +174,7 @@ def register_user():
             flash('A confirmation email has been sent via email.', 'success')
             return redirect(url_for('unconfirmed', email=email))
     else:
-        flash('Either Username or Email is already registered in the system!', 'error')
+        flash('Either Username or Email is already registered in the system!', 'danger')
         # Add a comment saying you are already registered
         session['username'] = None
     return redirect(url_for('register_template'))
