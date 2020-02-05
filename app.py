@@ -33,6 +33,11 @@ def ch_uname_template():
     return render_template('username.html')
 
 
+@app.route('/ch-passwd')
+def ch_passwd_template():
+    return render_template('password.html')
+
+
 @app.route('/register')
 def register_template():
     return render_template('register.html')
@@ -98,6 +103,26 @@ def ch_uname():
                 return render_template("profile.html")
     else:
         return render_template("username.html")
+
+#password change function
+@app.route('/auth/ch-passwd', methods=['POST', 'GET'])
+def ch_passwd():
+    if request.method == 'POST':
+        oldpassword = request.form['oldpassword']
+        newpassword = request.form['newpassword']
+        renewpassword = request.form['renewpassword']
+        print (oldpassword)
+        if newpassword == renewpassword:
+            if User.up_passwd(oldpassword, renewpassword):
+                flash('successfully password changed','success')
+                return redirect(url_for('Profile_of_User'))
+            else:
+                return redirect(url_for('ch_passwd_template'))
+        else:
+            flash('Newpassword and retyped newpassword are different','danger')
+            return redirect(url_for('ch_passwd_template'))
+    else:
+        return redirect(url_for('ch_passwd_template'))
 
 
 @app.route('/profile')
