@@ -9,12 +9,13 @@ from models.blog import Blog
 
 # added usertype
 class User(object):
-    def __init__(self, name, email, username, password, usertype, _id=None):
+    def __init__(self, name, email, username, password, confirmed, confirmed_on=None, _id=None):
         self.name = name
         self.email = email
         self.username = username
         self.password = password
-        self.usertype = usertype
+        self.confirmed = confirmed
+        self.confirmed_on = confirmed_on
         self._id = uuid.uuid4().hex if _id is None else _id
 
     @classmethod
@@ -28,12 +29,6 @@ class User(object):
             if data2 is not None:
                 return True
         return False
-
-    @classmethod
-    def get_by_id(cls, _id):
-        data = Database.find_one("test", {"_id": _id})
-        if data is not None:
-            return cls(**data)
 
     @staticmethod
     def login(email, password):
@@ -61,12 +56,12 @@ class User(object):
             return render_template('login.html')
 
     @classmethod
-    def register(cls, name, email, username, password, usertype):
+    def register(cls, name, email, username, password):
         user = cls.get_by_email(email, username)
         if user is False:
             # User doesn't exist, so we can create it
             enc_password = sha256_crypt.encrypt(str(password))
-            new_user = cls(name, email, username, enc_password, usertype)
+            new_user = cls(name, email, username, enc_password, confirmed='False', confirmed_on='None')
             new_user.save_to_mongo()
             session['username'] = username
             session['logged_in'] = True
@@ -122,7 +117,8 @@ class User(object):
             "email": self.email,
             "username": self.username,
             "password": self.password,
-            "type": self.usertype
+            "confirmed": self.confirmed,
+            "confirmed_on": self.confirmed_on
         }
 
     def previous_uname(self):

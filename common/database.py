@@ -1,4 +1,5 @@
 import pymongo
+import datetime
 
 
 class Database(object):
@@ -24,3 +25,6 @@ class Database(object):
     def find_one(collection, query):
         return Database.DATABASE[collection].find_one(query)
 
+    @staticmethod
+    def update_confirm(collection, email):
+        Database.DATABASE[collection].update({"email": email}, {"$set": {"confirmed": "True", "confirmed_on": datetime.datetime.now()}})
