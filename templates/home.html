@@ -9,25 +9,57 @@
       <a href="/login" class="btn btn-success btn-lg">Login</a>
     {% endif %}
   </div>
-<div>
-  <table class="table table-striped">
-    <tr>
-      <th>Event Title</th>
-      <th>Description</th>
-      <th>Event Category</th>
-      <th>Event Date</th>
-      <th></th>
-      <th></th>
-    </tr>
+  <div class="row">
     {% for event in events %}
-     	      <tr>
-        
-        	        <td>{{event.title}}</td>
-        	        <td>{{event.description}}</td>
-                <td>{{event.ticket_price}}</td>
-        <td>{{event.event_date}}</td>
-      </tr>	      
+      <div class="col-sm-4">
+        <div class="card" style="width: 24rem;">
+          <!--<div class="middle">
+    			<div class="text">Book Now</div>
+  				</div>-->
+          <img src="https://picsum.photos/id/47/245/165" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">{{event.title}}</h5>
+            <h6 class="card-title">{{event.event_category}}</h6>
+            <p class="card-text">{{event.description}}</p>
+            <p class="card-text">{{event.event_date}}</p>
+            <p><b class="card-text">Price:{{event.ticket_price}}</b></p>
+            <a href="#" class="btn btn-primary">More details</a>
+            <a href="/book_event" class="btn btn-primary">Book Event</a>
+          </div>
+        </div>
+        <br/>
+      </div>
     {% endfor %}
-  </table>
-</div>
-{% endblock %}s
+    </div>
+  <!--div>
+    <div class="row">
+      <div class="col-sm-6">
+      <div class="card" style="width: 18rem;">
+        <img src="..." class="card-img-top" alt="...">
+        <div class="card-body">
+          
+        </div>
+      </div>
+    </div>
+    </div>
+    <table class="table table-striped">
+      <tr>
+        <th>Event Title</th>
+        <th>Description</th>
+        <th>Event Category</th>
+        <th>Event Date</th>
+        <th></th>
+        <th></th>
+      </tr>
+      {% for event in events %}
+       	<tr>
+          <td>{{event.title}}</td>
+          <td>{{event.description}}</td>
+          <td>{{event.ticket_price}}</td>
+          <td>{{event.event_date}}</td>
+        </tr>	      
+      {% endfor %}
+    </table>
+  </div-->
+
+{% endblock %}

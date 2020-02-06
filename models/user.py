@@ -87,6 +87,17 @@ class User(object):
         return True
 
     @staticmethod
+    def up_passwd(oldpassword, newpassword):
+        dbPassword = Database.find_one("test", {"username": session['username']})['password']
+        if sha256_crypt.verify(newpassword, dbPassword):
+            flash('Your new and old passwords are same. Please type some different password', 'danger')
+        elif sha256_crypt.verify(oldpassword, dbPassword):
+            Database.DATABASE["test"].update({"username": session['username']}, {"$set":{"password": sha256_crypt.encrypt(str(newpassword))}})
+            return True
+        else:
+            flash('Your old password is incorrect', 'danger')
+
+    @staticmethod
     def logout():
         session.clear()
         flash('You are now logged out', 'success')

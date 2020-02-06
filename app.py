@@ -6,6 +6,7 @@ from models.user import User
 from models.participant import Participant
 from models.organiser import Organizer
 from models.events import Event
+from random import randint
 
 from flask import Flask, render_template, request, session, make_response, redirect, url_for, flash
 from functools import wraps
@@ -24,9 +25,9 @@ mail = Mail(app)
 
 @app.route('/')
 def home_template():
+
     event_log = Database.find("event", {})
-    '''for events in :
-        event_log.append(events)'''
+
     return render_template('home.html', events=event_log)
 
 
@@ -38,6 +39,11 @@ def login_template():
 @app.route('/ch-uname')
 def ch_uname_template():
     return render_template('username.html')
+
+
+@app.route('/ch-passwd')
+def ch_passwd_template():
+    return render_template('password.html')
 
 
 @app.route('/register')
@@ -105,6 +111,25 @@ def ch_uname():
             return render_template("profile.html")
     else:
         return render_template("username.html")
+
+#password change function
+@app.route('/auth/ch-passwd', methods=['POST', 'GET'])
+def ch_passwd():
+    if request.method == 'POST':
+        oldpassword = request.form['oldpassword']
+        newpassword = request.form['newpassword']
+        renewpassword = request.form['renewpassword']
+        if newpassword == renewpassword:
+            if User.up_passwd(oldpassword, renewpassword):
+                flash('successfully password changed','success')
+                return redirect(url_for('Profile_of_User'))
+            else:
+                return redirect(url_for('ch_passwd_template'))
+        else:
+            flash('Newpassword and retyped newpassword are different','danger')
+            return redirect(url_for('ch_passwd_template'))
+    else:
+        return redirect(url_for('ch_passwd_template'))
 
 
 @app.route('/profile')
