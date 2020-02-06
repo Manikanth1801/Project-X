@@ -81,9 +81,9 @@ class User(object):
                 old_username =puname
                 Database.DATABASE["test"].update({"username": old_username}, {"$set":{"username": new_username}})
                 session['username']=new_username
-                flash("Hi {}, Your Username is Updated".format(new_username))
+                flash("Hi {}, Your Username is Updated".format(new_username), "success")
             else:
-                flash("You might have entered wrong Username or Password")
+                flash("You might have entered wrong Username or Password", "danger")
         return True
 
     @staticmethod
