@@ -111,7 +111,6 @@ def ch_passwd():
         oldpassword = request.form['oldpassword']
         newpassword = request.form['newpassword']
         renewpassword = request.form['renewpassword']
-        print (oldpassword)
         if newpassword == renewpassword:
             if User.up_passwd(oldpassword, renewpassword):
                 flash('successfully password changed','success')
