@@ -49,6 +49,7 @@ class User(object):
                 flash('You are now logged in', 'success')
                 return True
             else:
+                # Dont flash or render tremplates from here. Do it in app.py
                 flash('Invalid login')
                 return render_template('login.html')
         else:
