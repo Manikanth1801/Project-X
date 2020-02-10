@@ -170,7 +170,6 @@ def confirm_token(token, expiration=3600):
 
 
 @app.route('/confirm_email/<token>/<email>')
-@is_logged_in
 def confirm_email(token, email):
     user = Database.find_one("test", {"email": email})
     if user['confirmed'] == 'True':
@@ -225,7 +224,6 @@ def orgReg():
 
 
 @app.route('/unconfirmed/<email>')
-@is_logged_in
 def unconfirmed(email):
     user = Database.find_one("test", {'email': email})
     if user['confirmed'] == 'True':
