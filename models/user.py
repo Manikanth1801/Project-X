@@ -1,3 +1,8 @@
+''' sha256_crypt.verify(newpassword, dbPassword) is written more than once. Create a new function'''
+
+
+
+
 import datetime
 import uuid
 from flask import session, flash, render_template
