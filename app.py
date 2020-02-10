@@ -89,6 +89,7 @@ def is_logged_in(f):
     def wrap(*args, **kwargs):
         if 'logged_in' in session:
             return f(*args, **kwargs)
+        # No Need of the else part. Redirect the whole thing form Login Function.
         else:
             flash('Unauthorized User, Please login', 'danger')
             return redirect(url_for('login_user'))
