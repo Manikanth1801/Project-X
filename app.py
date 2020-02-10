@@ -86,9 +86,9 @@ def login_user():
         email = request.form['email']
         password = request.form['password']
         if User.login(email, password):
-            #flash('You are now logged in', 'success')
             return redirect(url_for('Profile_of_User'))
-    else:
+        else:
+            flash("Username/Email not found or Incorrect password provided!", 'warning')
         return render_template("login.html")
 
 
