@@ -280,6 +280,13 @@ def create_event():
     return redirect(url_for('create_event_template'))
 
 
+
+
+@app.route('/book_event/<_id>')
+def book_event(_id):
+    return render_template('booked.html', id=_id)
+    
+
 # @app.route('/blogs/<string:user_id>')
 # @app.route('/blogs')
 # def user_blogs(user_id=None):
