@@ -25,9 +25,7 @@ mail = Mail(app)
 
 @app.route('/')
 def home_template():
-
     event_log = Database.find("event", {})
-
     return render_template('home.html', events=event_log)
 
 
@@ -69,6 +67,17 @@ def create_event_template():
 @app.before_first_request
 def initialize_database():
     Database.initialize()
+    
+   
+@app.route('/send/<email>')
+def send_confirmation(email):
+    token = generate_confirmation_token(email)
+    confirm_url = url_for('confirm_email', token=token, email=email, _external=True)
+    html = render_template('activate.html', confirm_url=confirm_url)
+    subject = "Please confirm your email"
+    send_email(email, subject, html)
+    flash('A confirmation email has been sent.', 'success')
+    return redirect(url_for('unconfirmed', email=email))
 
 
 @app.route('/auth/login', methods=['POST', 'GET'])
@@ -191,14 +200,7 @@ def register_user():
         password = request.form['password']
         #added new field usertype for registering
         if User.register(name, email, username, password):
-            session['username'] = username
-            token = generate_confirmation_token(email)
-            confirm_url = url_for('confirm_email', token=token, email=email, _external=True)
-            html = render_template('activate.html', confirm_url=confirm_url)
-            subject = "Please confirm your email"
-            send_email(email, subject, html)
-            flash('A confirmation email has been sent via email.', 'success')
-            return redirect(url_for('unconfirmed', email=email))
+            send_confirmation(email)
     else:
         flash('Either Username or Email is already registered in the system!', 'danger')
         # Add a comment saying you are already registered
@@ -229,7 +231,7 @@ def unconfirmed(email):
     if user['confirmed'] == 'True':
         return redirect(url_for('Profile_of_User'))
     flash('Please confirm your Email ID!', 'warning')
-    return render_template('unconfirmed.html')
+    return render_template('unconfirmed.html', email=email)
 
 
 # participant details saving to db
