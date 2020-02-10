@@ -1,3 +1,8 @@
+''' sha256_crypt.verify(newpassword, dbPassword) is written more than once. Create a new function'''
+
+
+
+
 import datetime
 import uuid
 from flask import session, flash, render_template
@@ -49,6 +54,7 @@ class User(object):
                 flash('You are now logged in', 'success')
                 return True
             else:
+                # Dont flash or render tremplates from here. Do it in app.py
                 flash('Invalid login')
                 return render_template('login.html')
         else:
@@ -81,10 +87,21 @@ class User(object):
                 old_username =puname
                 Database.DATABASE["test"].update({"username": old_username}, {"$set":{"username": new_username}})
                 session['username']=new_username
-                flash("Hi {}, Your Username is Updated".format(new_username))
+                flash("Hi {}, Your Username is Updated".format(new_username), "success")
             else:
-                flash("You might have entered wrong Username or Password")
+                flash("You might have entered wrong Username or Password", "danger")
         return True
+
+    @staticmethod
+    def up_passwd(oldpassword, newpassword):
+        dbPassword = Database.find_one("test", {"username": session['username']})['password']
+        if sha256_crypt.verify(newpassword, dbPassword):
+            flash('Your new and old passwords are same. Please type some different password', 'danger')
+        elif sha256_crypt.verify(oldpassword, dbPassword):
+            Database.DATABASE["test"].update({"username": session['username']}, {"$set":{"password": sha256_crypt.encrypt(str(newpassword))}})
+            return True
+        else:
+            flash('Your old password is incorrect', 'danger')
 
     @staticmethod
     def logout():
