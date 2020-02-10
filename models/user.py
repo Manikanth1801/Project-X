@@ -40,26 +40,26 @@ class User(object):
         # Check whether input is either username or password
         data1 = Database.find_one("test", {"username": email})
         data2 = Database.find_one("test", {"email": email})
-        if (data1 or data2) is not None:
-            if data1 is not None:
+        if data1 is not None:
+            if data1['confirmed'] == "True":
                 dbPassword = data1['password']
-            else:
+                session['username'] = email
+                if sha256_crypt.verify(password, dbPassword):
+                    session['logged_in'] = True
+                    flash('You are now logged in', 'success')
+                    return True
+                else:
+                    return False
+        elif data2 is not None:
+            if data2['confirmed'] == "True":
                 dbPassword = data2['password']
+                session['username'] = data2['username']
             if sha256_crypt.verify(password, dbPassword):
                 session['logged_in'] = True
-                if data1 is not None:
-                    session['username'] = email
-                else:
-                    session['username'] = data2['username']
                 flash('You are now logged in', 'success')
                 return True
             else:
-                # Dont flash or render tremplates from here. Do it in app.py
-                flash('Invalid login')
-                return render_template('login.html')
-        else:
-            flash('Username not found')
-            return render_template('login.html')
+                return False
 
     @classmethod
     def register(cls, name, email, username, password):
