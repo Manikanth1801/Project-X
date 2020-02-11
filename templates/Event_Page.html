@@ -1,13 +1,12 @@
 {% extends 'base.html' %}
 {% block body %}
-
-
-
-
-
-
-
-
-
-
+<div class="card-body">
+            <h5 class="card-title">{{event.title}}</h5>
+            <h6 class="card-title">{{event.event_category}}</h6>
+            <p class="card-text">{{event.description}}</p>
+            <p class="card-text">{{event.event_date}}</p>
+            <p><b class="card-text">Price:{{event.ticket_price}}</b></p>
+            
+            
+          </div>
 {% endblock %}
