@@ -83,7 +83,7 @@ def send_confirmation(email):
     flash('A confirmation email has been sent.', 'success')
     return redirect(url_for('unconfirmed', email=email))
 
-#@app.route('/confirm_email/<token>/<email>')
+@app.route('/cnf_url_fp/<token>/<email>')
 def cnf_url_fp(token, email):
     email = confirm_token(token)
     
