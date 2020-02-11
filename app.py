@@ -91,6 +91,7 @@ def cnf_url_fp(token, email):
         render_template('up_pass.html', email=email)
     else:
         flash('The confirmation link is invalid or has expired.', 'danger')
+    return True
 
 def send_confirmation_fp(email):
     token = generate_confirmation_token(email)
@@ -98,7 +99,8 @@ def send_confirmation_fp(email):
     subject = "To change your password, Please click on the link below. "
     html = render_template('fp_activate_msg.html', cnf_url_fp=cnf_url_fp)
     send_email(email,subject,html)
-     
+    flash('A confirmation message has been sent to your registered email. Please click on the link to reset your password', 'success')
+    return True
    
     
 #-------------------------------------------------------------------------------------------------------------------------
@@ -203,7 +205,7 @@ def afp():
     if request.method == 'POST':
         email = request.form['email']
         send_confirmation_fp(email)
-        flash('A confirmation message has been sent to your registered email. Please click on the link to reset your password', 'success')
+        
     return True
         
 @app.route('/set-password/<email>', methods=['POST', 'GET'])
