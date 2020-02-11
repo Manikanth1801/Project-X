@@ -31,11 +31,6 @@ def home_template():
     event_log = Database.find("event", {})
     return render_template('home.html', events=event_log)
 
-@app.route('/profile')
-@is_logged_in
-def Profile_of_User():
-    return render_template("profile.html")
-
 
 @app.route('/login')
 def login_template():
@@ -137,6 +132,11 @@ def is_logged_in(f):
 def logout_user():
     User.logout()
     return render_template('login.html')
+
+@app.route('/profile')
+@is_logged_in
+def Profile_of_User():
+    return render_template("profile.html")
 
 #------------------------------------------------------------------------------------------------------------------------
 #Updation Things
