@@ -88,7 +88,7 @@ def cnf_url_fp(token, email):
     email = confirm_token(token)
     user = Database.find_one("test", {"email": email})
     if user['email'] == email:
-        render_template('up_pass.html', email=email)
+        return render_template('up_pass.html', email=email)
     else:
         flash('The confirmation link is invalid or has expired.', 'danger')
     return render_template('login.html')
