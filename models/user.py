@@ -69,7 +69,6 @@ class User(object):
             enc_password = sha256_crypt.encrypt(str(password))
             new_user = cls(name, email, username, enc_password, confirmed='False', confirmed_on='None')
             new_user.save_to_mongo()
-            flash('You are now registered', 'success')
             return True
         else:
             return False
