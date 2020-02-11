@@ -98,11 +98,7 @@ def send_confirmation_fp(email):
     html = render_template('fp_activate_msg.html', cnf_url_fp=cnf_url_fp)
     send_email(email,subject,html)
      
-    
-    else:
-        flash('The confirmation link is invalid or has expired.', 'danger')
-    
-        
+   
     
 #-------------------------------------------------------------------------------------------------------------------------
 #Login Functions
