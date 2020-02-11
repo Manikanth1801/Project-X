@@ -3,7 +3,7 @@
 {% block body %}
 <h1>Set New Password</h1>
 <div class="container page-form">
-    <form id="set_password" action="/set-password" method="post">
+    <form id="set_password" action="/set-password/{{email}}" method="post">
         <div class="form-group">
             <label for="newpassword">New Password</label>
             <input type="password" id="newpassword" class="form-control" name="newpassword" required>
