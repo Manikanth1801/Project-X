@@ -86,7 +86,7 @@ def send_confirmation(email):
 @app.route('/cnf_url_fp/<token>/<email>')
 def cnf_url_fp(token, email):
     email = confirm_token(token)
-    
+    user = Database.find_one("test", {"email": email})
     if user['email'] == email:
         render_template('up_pass.html', email=email)
     else:
@@ -203,7 +203,8 @@ def afp():
     if request.method == 'POST':
         email = request.form['email']
         send_confirmation_fp(email)
-    return render_template('login.html')
+        flash('A confirmation message has been sent to your registered email. Please click on the link to reset your password', 'success')
+    return True
         
 @app.route('/set-password/<email>', methods=['POST', 'GET'])
 def set_password(email):
