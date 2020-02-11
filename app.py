@@ -261,6 +261,8 @@ def send_email(to, subject, template):
 def unconfirmed(email):
     user = Database.find_one("test", {'email': email})
     if user['confirmed'] == 'True':
+        session['logged_in'] = True
+        session['username'] = email
         flash('You are now registered', 'success')
         return redirect(url_for('Profile_of_User'))
     flash('Please confirm your Email ID!', 'warning')
