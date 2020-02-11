@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<h1>Set New Password</h1>
+<div class="container page-form">
+    <form id="set_password" action="/set-password" method="post">
+        <div class="form-group">
+            <label for="newpassword">New Password</label>
+            <input type="password" id="newpassword" class="form-control" name="newpassword" required>
+        </div>
+        <div class="form-group">
+            <label for="renewpassword">Retype New Password</label>
+            <input type="password" id="renewpassword" class="form-control" name="renewpassword" required>
+        </div>
+        <button type="submit" class="btn btn-success">Submit</button>
+    </form>
+</div>
+{% endblock %}
