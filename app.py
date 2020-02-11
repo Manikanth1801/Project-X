@@ -213,8 +213,8 @@ def set_password(email):
     if request.method == 'POST':
         password = request.form['newpassword']
         re_password = request.form['renewpassword']
-        if newpassword == renewpassword:
-            if User.up_passwd_1(email, renewpassword):
+        if password == re_password:
+            if User.up_passwd_1(email, re_password):
                 flash('successfully password changed','success')
                 return render_template('login.html')
         
