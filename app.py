@@ -15,6 +15,8 @@ from itsdangerous import URLSafeTimedSerializer
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
+#----------------------------------------------------------------------------------------------------------------------
+
 app = Flask(__name__)
 app.config.from_pyfile('config.cfg')
 app.secret_key = 'siva123'
@@ -22,6 +24,7 @@ app.secret_key = 'siva123'
 
 mail = Mail(app)
 
+#----------------------------------------------------------------------------------------------------------------------
 
 @app.route('/')
 def home_template():
@@ -63,12 +66,13 @@ def part_register_template():
 def create_event_template():
     return render_template('create_event.html')
 
+#------------------------------------------------------------------------------------------------------------------------
 
 @app.before_first_request
 def initialize_database():
     Database.initialize()
     
-   
+#-------------------------------------------------------------------------------------------------------------------------
 @app.route('/send/<email>')
 def send_confirmation(email):
     token = generate_confirmation_token(email)
@@ -79,6 +83,44 @@ def send_confirmation(email):
     flash('A confirmation email has been sent.', 'success')
     return redirect(url_for('unconfirmed', email=email))
 
+@app.route('/cnf_url_fp/<token>/<email>')
+def cnf_url_fp(token, email):
+    email = confirm_token(token)
+    user = Database.find_one("test", {"email": email})
+    if user['email'] == email:
+        return render_template('up_pass.html', email=email)
+    else:
+        flash('The confirmation link is invalid or has expired.', 'danger')
+    return render_template('login.html')
+
+def send_confirmation_fp(email):
+    token = generate_confirmation_token(email)
+    cnf_url_fp = url_for('cnf_url_fp', token=token, email=email, _external=True)
+    subject = "To change your password, Please click on the link below. "
+    html = render_template('fp_activate_msg.html', cnf_url_fp=cnf_url_fp)
+    send_email(email,subject,html)
+    flash('A confirmation message has been sent to your registered email. Please click on the link to reset your password', 'success')
+    return render_template('login.html')
+   
+    
+#-------------------------------------------------------------------------------------------------------------------------
+#Login Functions
+
+@app.route('/auth/register', methods=['POST', 'GET'])
+def register_user():
+    if request.method == 'POST':
+        name = request.form['name']
+        email = request.form['email']
+        username = request.form['username']
+        password = request.form['password']
+        #added new field usertype for registering
+        if User.register(name, email, username, password):
+            send_confirmation(email)
+    else:
+        flash('Either Username or Email is already registered in the system!', 'danger')
+        # Add a comment saying you are already registered
+        session['username'] = None
+    return redirect(url_for('register_template'))
 
 @app.route('/auth/login', methods=['POST', 'GET'])
 def login_user():
@@ -105,6 +147,19 @@ def is_logged_in(f):
 
     return wrap
 
+@app.route('/logout')
+@is_logged_in
+def logout_user():
+    User.logout()
+    return render_template('login.html')
+
+@app.route('/profile')
+@is_logged_in
+def Profile_of_User():
+    return render_template("profile.html")
+
+#------------------------------------------------------------------------------------------------------------------------
+#Updation Things
 
 @app.route('/auth/ch-uname', methods=['POST', 'GET'])
 def ch_uname():
@@ -141,19 +196,32 @@ def ch_passwd():
     else:
         return redirect(url_for('ch_passwd_template'))
 
+@app.route('/forgot_password')
+def fp():
+    return render_template('forgot_password.html')
 
-@app.route('/profile')
-@is_logged_in
-def Profile_of_User():
-    return render_template("profile.html")
-
-
-@app.route('/logout')
-@is_logged_in
-def logout_user():
-    User.logout()
+@app.route('/auth/forgot_password', methods=['GET', 'POST'])
+def afp():
+    if request.method == 'POST':
+        email = request.form['email']
+        send_confirmation_fp(email)
+        
     return render_template('login.html')
+        
+@app.route('/set-password/<email>', methods=['POST', 'GET'])
+def set_password(email):
+    if request.method == 'POST':
+        password = request.form['newpassword']
+        re_password = request.form['renewpassword']
+        if password == re_password:
+            if User.up_passwd_1(email, re_password):
+                flash('successfully password changed','success')
+                return render_template('login.html')
+        
+    
 
+#----------------------------------------------------------------------------------------------------------------
+#Sending Confirmation Email
 
 def generate_confirmation_token(email):
     serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
@@ -188,41 +256,7 @@ def send_email(to, subject, template):
     message = Mail(from_email=app.config['MAIL_DEFAULT_SENDER'], to_emails=[to], subject=subject, html_content=template)
     sg = SendGridAPIClient(app.config['SENDGRID_API_KEY'])
     sg.send(message)
-
-
-@app.route('/auth/register', methods=['POST', 'GET'])
-def register_user():
-    if request.method == 'POST':
-        name = request.form['name']
-        email = request.form['email']
-        username = request.form['username']
-        password = request.form['password']
-        #added new field usertype for registering
-        if User.register(name, email, username, password):
-            send_confirmation(email)
-    else:
-        flash('Either Username or Email is already registered in the system!', 'danger')
-        # Add a comment saying you are already registered
-        session['username'] = None
-    return redirect(url_for('register_template'))
-
-
-# organizer details saving to db
-@app.route('/auth/register/organizer', methods=['GET', 'POST'])
-def orgReg():
-    if request.method == 'POST':
-        org_name = request.form['org_name']
-        address1 = request.form['address1']
-        address2 = request.form['address2']
-        state = request.form['stt']
-        city = request.form['sttt']
-        pin = request.form['pin']
-        org_phone = request.form['org_phone']
-        if Organizer.orgRegister(org_name, address1, address2, state, city, pin, org_phone):
-            return redirect(url_for('Profile_of_User'))
-    return redirect(url_for('org_register_template'))
-
-
+    
 @app.route('/unconfirmed/<email>')
 def unconfirmed(email):
     user = Database.find_one("test", {'email': email})
@@ -231,21 +265,7 @@ def unconfirmed(email):
     flash('Please confirm your Email ID!', 'warning')
     return render_template('unconfirmed.html', email=email)
 
-
-# participant details saving to db
-@app.route('/auth/register/participant', methods=['GET', 'POST'])
-def partReg():
-    if request.method == 'POST':
-        preference1 = request.form['preference1']
-        preference2 = request.form['preference2']
-        preference3 = request.form['preference3']
-        state = request.form['stt']
-        city = request.form['sttt']
-        if Participant.partRegister(preference1, preference2, preference3, state, city):
-            return redirect(url_for('Profile_of_User'))
-
-    return redirect(url_for('part_register_template'))
-
+#-----------------------------------------------------------------------------------------------------------------------------
 
 '''
 It is to design update, delete feature of the user after login. e.g. Updating Password, preferences and all
@@ -285,7 +305,48 @@ def create_event():
 @app.route('/book_event/<_id>')
 def book_event(_id):
     return render_template('booked.html', id=_id)
+
+@app.route('/event_page/<_id>')
+def event_page(_id):
+    event = Database.find_one('event', {'_id':_id})
+    return render_template('Event_Page.html', event = event)
+
     
+    
+'''
+# organizer details saving to db
+@app.route('/auth/register/organizer', methods=['GET', 'POST'])
+def orgReg():
+    if request.method == 'POST':
+        org_name = request.form['org_name']
+        address1 = request.form['address1']
+        address2 = request.form['address2']
+        state = request.form['stt']
+        city = request.form['sttt']
+        pin = request.form['pin']
+        org_phone = request.form['org_phone']
+        if Organizer.orgRegister(org_name, address1, address2, state, city, pin, org_phone):
+            return redirect(url_for('Profile_of_User'))
+    return redirect(url_for('org_register_template'))
+
+
+
+
+
+# participant details saving to db
+@app.route('/auth/register/participant', methods=['GET', 'POST'])
+def partReg():
+    if request.method == 'POST':
+        preference1 = request.form['preference1']
+        preference2 = request.form['preference2']
+        preference3 = request.form['preference3']
+        state = request.form['stt']
+        city = request.form['sttt']
+        if Participant.partRegister(preference1, preference2, preference3, state, city):
+            return redirect(url_for('Profile_of_User'))
+
+    return redirect(url_for('part_register_template'))
+'''
 
 # @app.route('/blogs/<string:user_id>')
 # @app.route('/blogs')

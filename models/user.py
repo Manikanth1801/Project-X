@@ -102,6 +102,17 @@ class User(object):
             return True
         else:
             flash('Your old password is incorrect', 'danger')
+    
+    @staticmethod
+    def up_passwd_1(email, newpassword):
+        dbPassword = Database.find_one("test", {"email": email})['password']
+        '''if sha256_crypt.verify(newpassword, dbPassword):
+            flash('Your new and old passwords are same. Please type some different password', 'danger')'''
+        #if sha256_crypt.verify(oldpassword, dbPassword):
+        Database.DATABASE["test"].update({"email": email}, {"$set":{"password": sha256_crypt.encrypt(str(newpassword))}})
+        return True
+        #else:
+            #flash('Your old password is incorrect', 'danger')
 
     @staticmethod
     def logout():
