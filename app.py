@@ -83,6 +83,27 @@ def send_confirmation(email):
     flash('A confirmation email has been sent.', 'success')
     return redirect(url_for('unconfirmed', email=email))
 
+def cnf_url_fp(email, token):
+    email = confirm_token(token)
+    
+    if user['email'] == email:
+        render_template('up_pass.html', email=email)
+    else:
+        flash('The confirmation link is invalid or has expired.', 'danger')
+
+def send_confirmation_fp(email):
+    token = generate_confirmation_token(email)
+    cnf_url_fp = url_for('cnf_url_fp', token=token, email=email, _external=True)
+    subject = "To change your password, Please click on the link below. "
+    html = render_template('fp_activate_msg.html', cnf_url_fp=cnf_url_fp)
+    send_email(email,subject,html)
+     
+    
+    else:
+        flash('The confirmation link is invalid or has expired.', 'danger')
+    
+        
+    
 #-------------------------------------------------------------------------------------------------------------------------
 #Login Functions
 
@@ -175,6 +196,28 @@ def ch_passwd():
             return redirect(url_for('ch_passwd_template'))
     else:
         return redirect(url_for('ch_passwd_template'))
+
+@app.route('/forgot_password')
+def fp():
+    return render_template('forgot_password.html')
+
+@app.route('/auth/forgot_password', methods=['GET', 'POST'])
+def afp():
+    if request.method == 'POST':
+        email = request.form['email']
+        send_confirmation_fp(email)
+        
+@app.route('/set-password/<email>', methods=['POST', 'GET'])
+def set_password(email):
+    if request.method == 'POST':
+        password = request.form['newpassword']
+        re_password = request.form['renewpassword']
+        if newpassword == renewpassword:
+            if User.up_passwd_1(email, renewpassword):
+                flash('successfully password changed','success')
+                return render_template('login.html')
+        
+    
 
 #----------------------------------------------------------------------------------------------------------------
 #Sending Confirmation Email
