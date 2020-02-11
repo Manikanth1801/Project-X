@@ -262,7 +262,10 @@ def create_event():
 def book_event(_id):
     return render_template('booked.html', id=_id)
 
-#@app.route('/event_page')
+@app.route('/event_page/<_id>')
+def event_page(_id):
+    event = Database.find_one('event', {'_id':_id})
+    return render_template('Event_Page.html', event = event)
 
     
     
