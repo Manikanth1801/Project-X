@@ -261,6 +261,9 @@ def create_event():
 @app.route('/book_event/<_id>')
 def book_event(_id):
     return render_template('booked.html', id=_id)
+
+#@app.route('/event_page')
+
     
     
 '''
