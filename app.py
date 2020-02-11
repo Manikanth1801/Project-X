@@ -203,6 +203,7 @@ def afp():
     if request.method == 'POST':
         email = request.form['email']
         send_confirmation_fp(email)
+    return render_template('login.html')
         
 @app.route('/set-password/<email>', methods=['POST', 'GET'])
 def set_password(email):
