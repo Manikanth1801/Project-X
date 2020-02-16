@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% block body %}
-<div class="card-body">
+<form id="login-form" action="/book_event/{{event._id}}/{{event.title}}/{{event.ticket_price}}/{{event.event_date}}" method="post">
+
+          <div class="card-body">
             <h5 class="card-title">{{event.title}}</h5>
             
             <p class="card-text">{{event.description}}</p>
@@ -13,6 +15,7 @@
             <p class="card-text">{{event.email}}</p>
             <p class="card-text">{{event.contact_no}}</p>
             
-            <a href="/book_event/{{event._id}}" class="btn btn-primary">Book Event</a>
+            <button type="submit" class="btn btn-primary">Book Event</button>
           </div>
+</form>
 {% endblock %}
