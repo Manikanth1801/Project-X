@@ -113,6 +113,8 @@ class User(object):
 
     @staticmethod
     def logout():
+        session['username'] = None
+        session['logged_in'] = None
         session.clear()
         flash('You are now logged out', 'success')
         return True
