@@ -1,6 +1,7 @@
 from common.database import Database
 from models.blog import Blog
 from models.post import Post
+
 # importing multiple classes in user model
 from models.user import User
 from models.participant import Participant
