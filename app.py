@@ -345,10 +345,6 @@ def book_event(_id,title,ticket_price,event_date):
     return render_template('profile.html')
 
 
-@app.route('/book_event/<_id>')
-def book_event(_id):
-    return render_template('booked.html', id=_id)
-
 @app.route('/event_page/<_id>')
 def event_page(_id):
     event = Database.find_one('event', {'_id':_id})
