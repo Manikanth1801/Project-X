@@ -9,23 +9,27 @@
 <div class="container-fluid">
     <h1 class="text-center mb-3">Bootstrap Multi-Card Carousel</h1>
     <div id="myCarousel" class="carousel slide" data-ride="carousel">
-        <div class="carousel-inner row w-100 mx-auto">        
+        <div class="carousel-inner row w-100 mx-auto">
             {% for event in event %}
                 {% set actives = '' %}
                 {% if loop.index == 1 %}
                     {% set actives = 'active' %}
                 {% endif %}
-          
                 <div class="carousel-item col-md-4 {{actives}}">
-                    <div class="card">
-                        <img class="card-img-top img-fluid" src="http://placehold.it/800x600/f44242/fff" alt="Card image cap">
-                        <div class="card-body">
-                            <h4 class="card-title">{{event.title}}</h4>
-                            <p class="card-text">{{event.description}}</p>
-                            <p class="card-text"><small class="text-muted">{{event.event_date}}</small></p>
+                    <div class="card mb-4 shadow-sm">
+                    <img src="https://picsum.photos/id/30/245/165" class="card-img-top" alt="...">
+                    <div class="card-body">
+                      <h5 class="card-title">{{event.title}}</h5>
+                      <p class="card-text">{{event.description}}</p>
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                          <a href="/event_page/{{event._id}}" class="btn btn-sm btn-outline-secondary" role="button" aria-pressed="true">View</a>
+                          <a href="/checkout" class="btn btn-sm btn-outline-secondary" role="button" aria-pressed="true">{{event.ticket_price}}</a>
                         </div>
-                        <a href="/event_page/{{event._id}}" class="btn btn-primary">Book Event</a>
+                        <small class="text-muted">{{event.event_date}}</small>
+                      </div>
                     </div>
+                  </div>
                 </div>
             {% endfor %}
         </div>
