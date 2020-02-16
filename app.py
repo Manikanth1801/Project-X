@@ -15,6 +15,8 @@ from itsdangerous import URLSafeTimedSerializer
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
+from models.booking import Booking
+
 #----------------------------------------------------------------------------------------------------------------------
 
 app = Flask(__name__)
@@ -28,8 +30,8 @@ mail = Mail(app)
 
 @app.route('/')
 def home_template():
-    event_log = Database.find("event", {})
-    return render_template('home.html', events=event_log)
+    event = Database.find('event', {})
+    return render_template('home.html', event=event)
 
 
 @app.route('/login')
@@ -65,6 +67,12 @@ def part_register_template():
 @app.route('/create_event')
 def create_event_template():
     return render_template('create_event.html')
+
+
+@app.route('/booked/<event_name>/<current_booking_id>/<ticket_price>/<event_date>')
+def booked_template(event_name,current_booking_id,ticket_price,event_date):
+    #bk = Database.find('booking', {'booked_by': user_id})
+    return render_template('booked.html', event_name=event_name,current_booking_id=current_booking_id,ticket_price=ticket_price,event_date=event_date)
 
 #------------------------------------------------------------------------------------------------------------------------
 
@@ -156,7 +164,19 @@ def logout_user():
 @app.route('/profile')
 @is_logged_in
 def Profile_of_User():
-    return render_template("profile.html")
+    user_id = Database.find_one('test', {'username': session['username']})['_id']
+    user_data= Database.find('booking', {'booked_by': user_id})
+    event_ids=[]
+    for i in user_data:
+        event_ids.append(i['event_id'])
+
+    event_list = []
+    for j in event_ids:
+        event_list.append(Database.find('event', {'_id': j}))
+
+    print(event_list)
+    print(event_ids)
+    return render_template("profile.html", event_list=event_list)
 
 #------------------------------------------------------------------------------------------------------------------------
 #Updation Things
@@ -247,7 +267,7 @@ def confirm_email(token, email):
     if user['email'] == email:
         Database.update_confirm("test", email)
         session['logged_in'] = True
-        session['username'] = email
+        session['username'] = user['username']
         flash('You have confirmed your account. Thanks!', 'success')
     else:
         flash('The confirmation link is invalid or has expired.', 'danger')
@@ -303,6 +323,26 @@ def create_event():
     return redirect(url_for('create_event_template'))
 
 
+@app.route('/book_event/<_id>/<title>/<ticket_price>/<event_date>', methods=['POST', 'GET'])
+def book_event(_id,title,ticket_price,event_date):
+    if request.method == 'POST':
+        user = Database.find_one('test', {'username': session['username']})
+        user_id = user['_id']
+        Booking.new_booking(_id, user_id)
+        bookings = list(Database.find('booking', {'booked_by': user_id}))[-1]
+        current_booking_id = bookings['_id']
+        '''event_name = Database.find_one('event', {'_id': current_id })
+
+        print(bookings)
+        print(type(bookings))
+        print(event_name)
+        print(type(event_name))
+        print(current_id)'''
+        #return redirect(url_for('booked_template',bookings = bookings,events =events))
+        return redirect(url_for('booked_template', event_name =title, current_booking_id=current_booking_id,ticket_price=ticket_price,event_date=event_date ))
+        #return render_template('booked.html', bookings = bookings,events =events)
+
+    return render_template('profile.html')
 
 
 @app.route('/book_event/<_id>')
