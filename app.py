@@ -35,8 +35,8 @@ def home_template():
 
 
 @app.route('/login')
-def login_template(leftover):
-    return render_template('login.html', leftover)
+def login_template():
+    return render_template('login.html')
 
 
 @app.route('/ch-uname')
@@ -137,8 +137,8 @@ def login_user():
         password = request.form['password']
         if User.login(email, password):
             return redirect(url_for('Profile_of_User'))
-        elsif leftover:
-            return redirect(url_for('book_event'))
+        #elsif leftover:
+            #return redirect(url_for('book_event'))
         else:
             flash("Username/Email not found or Incorrect password provided!", 'warning')
         return render_template("login.html")
