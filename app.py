@@ -326,6 +326,9 @@ def create_event():
 @app.route('/book_event/<_id>/<title>/<ticket_price>/<event_date>', methods=['POST', 'GET'])
 def book_event(_id,title,ticket_price,event_date):
     if request.method == 'POST':
+#trying the login thing
+        if session == None:
+            return render_template('login.html')
         user = Database.find_one('test', {'username': session['username']})
         user_id = user['_id']
         Booking.new_booking(_id, user_id)
