@@ -327,7 +327,7 @@ def create_event():
 def book_event(_id,title,ticket_price,event_date):
     if request.method == 'POST':
 #trying the login thing
-        if session['username'] == None:
+        if session['username'] is None:
             return render_template('login.html')
         user = Database.find_one('test', {'username': session['username']})
         user_id = user['_id']
