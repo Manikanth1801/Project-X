@@ -35,8 +35,8 @@ def home_template():
 
 
 @app.route('/login')
-def login_template():
-    return render_template('login.html')
+def login_template(leftover):
+    return render_template('login.html', leftover)
 
 
 @app.route('/ch-uname')
@@ -137,6 +137,8 @@ def login_user():
         password = request.form['password']
         if User.login(email, password):
             return redirect(url_for('Profile_of_User'))
+        elsif leftover:
+            return redirect(url_for('book_event'))
         else:
             flash("Username/Email not found or Incorrect password provided!", 'warning')
         return render_template("login.html")
@@ -328,7 +330,8 @@ def book_event(_id,title,ticket_price,event_date):
     if request.method == 'POST':
 #trying the login thing
         if session.get('logged_in') is None:
-            return render_template('login.html')
+            leftover = True
+            return redirect(url_for('login_template', leftover=leftover))
         user = Database.find_one('test', {'username': session['username']})
         user_id = user['_id']
         Booking.new_booking(_id, user_id)
