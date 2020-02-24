@@ -160,6 +160,7 @@ def Profile_of_User():
     return render_template("profile.html")
 
 #------------------------------------------------------------------------------------------------------------------------
+
 #Updation Things
 
 @app.route('/auth/ch-uname', methods=['POST', 'GET'])
