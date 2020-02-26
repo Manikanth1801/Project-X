@@ -16,7 +16,7 @@ from itsdangerous import URLSafeTimedSerializer
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
-#----------------------------------------------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------------------------------------------------
 
 app = Flask(__name__)
 app.config.from_pyfile('config.cfg')
