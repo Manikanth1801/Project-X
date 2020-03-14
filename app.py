@@ -24,7 +24,8 @@ app = Flask(__name__)
 app.secret_key = 'siva123'
 
 app.config.from_pyfile('config.cfg')
-app.config['MONGO_URI'] = "mongodb://test:test123@ds359868.mlab.com:59868/heroku_pt0qk8kw?retryWrites=false"
+#app.config['MONGO_URI'] = "mongodb://test:test123@ds359868.mlab.com:59868/heroku_pt0qk8kw?retryWrites=false"
+app.config['MONGO_URI'] = "mongodb://test:test123@ds359868.mlab.com:59868/heroku_pt0qk8kw"
 mongo = PyMongo(app)
 
 
