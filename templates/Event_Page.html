@@ -2,31 +2,20 @@
 {% block body %}
 <form id="login-form" action="/book_event/{{event._id}}/{{event.title}}/{{event.ticket_price}}/{{event.event_date}}" method="post">
 
-          <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<div class="container-fluid">
-    <div class="py-3">
-        <img style="width: 100%; object-fit: cover; height: 300px;" src="https://picsum.photos/id/30/1080/1080" class="rounded img-fluid" alt="Responsive image">
-    </div>
-    <div class="py-4">
-        <blockquote class="blockquote text-center" style="border-left-width: 0px;">
-            <p>{{event.title}}</p>
-            <footer class="blockquote-footer"> By <cite title="Source Title">Aqeeb (E Tunes)</cite></footer>
-        </blockquote>
-        <medium class="text-muted text-center" style="line-height:2.2em">
-            <p><i class="material-icons" style="font-size: 20px;">calendar_today</i>{{event.event_date}} {{event.event_time}}<br>
-             <i class="material-icons" style="font-size: 20px;">location_on</i>{{event.address_line1}}<br>
-             <i class="material-icons" style="font-size: 20px;">money</i> Rs {{event.ticket_price}} onwards <br>
-             <i class="material-icons" style="font-size: 20px;">group</i> 217 people viewed this event. <br>
-             <i class="material-icons" style="font-size: 20px;">contact_phone</i> Contact Us : {{event.email}} and {{event.contact_no}} </p>
-            <div class="py-3">
-                <button type="submit" class="btn btn-success">Book Tickets</button>
-            </div>
-        </medium>
-        <div class="py-4">
-            <h3> Description: </h3>
-            <p class="text-indent: 1em;line-height:2.2em;">{{event.description}}</p>
-        </div>
-    </div>
-</div>
+          <div class="card-body">
+            <h5 class="card-title">{{event.title}}</h5>
+            
+            <p class="card-text">{{event.description}}</p>
+            <p class="card-text">{{event.address_line1}}</p>
+            <p class="card-text">{{event.event_date}}</p>
+            <p class="card-text">{{event.event_time}}</p>
+            <p class="card-text">{{event.terms_and_condition}}</p>
+            <p class="card-text">{{event.address_line1}}</p>
+            <p><b class="card-text">Price:{{event.ticket_price}}</b></p>
+            <p class="card-text">{{event.email}}</p>
+            <p class="card-text">{{event.contact_no}}</p>
+            
+            <button type="submit" class="btn btn-primary">Book Event</button>
+          </div>
 </form>
 {% endblock %}

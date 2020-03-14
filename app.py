@@ -1,7 +1,6 @@
 from common.database import Database
 from models.blog import Blog
 from models.post import Post
-
 # importing multiple classes in user model
 from models.user import User
 from models.participant import Participant
@@ -15,24 +14,33 @@ from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
-
 from models.booking import Booking
+
+from flask_pymongo import PyMongo
 
 #----------------------------------------------------------------------------------------------------------------------
 
 app = Flask(__name__)
-app.config.from_pyfile('config.cfg')
 app.secret_key = 'siva123'
+
+app.config.from_pyfile('config.cfg')
+app.config['MONGO_URI'] = "mongodb://test:test123@ds359868.mlab.com:59868/heroku_pt0qk8kw?retryWrites=false"
+mongo = PyMongo(app)
 
 
 mail = Mail(app)
 
-#----------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------
+
+
+
+
 
 @app.route('/')
 def home_template():
     event = Database.find('event', {})
-    return render_template('home.html', event=event)
+    image = Database.find('image', {})
+    return render_template('home.html', event=event, image = image)
 
 
 @app.route('/login')
@@ -138,6 +146,8 @@ def login_user():
         password = request.form['password']
         if User.login(email, password):
             return redirect(url_for('Profile_of_User'))
+        #elsif leftover:
+            #return redirect(url_for('book_event'))
         else:
             flash("Username/Email not found or Incorrect password provided!", 'warning')
         return render_template("login.html")
@@ -180,6 +190,7 @@ def Profile_of_User():
     return render_template("profile.html", event_list=event_list)
 
 #------------------------------------------------------------------------------------------------------------------------
+
 #Updation Things
 
 @app.route('/auth/ch-uname', methods=['POST', 'GET'])
@@ -299,13 +310,20 @@ update asap
 '''
 #### this module for upload images for events
 
+######
+@app.route('/file/<filename>')
+def file(filename):
+    return (mongo.send_file(filename)) 
+
+######
 
 @app.route('/create_eve', methods=['GET', 'POST'])
 def create_event():
     if request.method == 'POST':
         title = request.form['title']
         description = request.form['description']
-        banner_image = request.form['banner_image']
+        banner_image = request.files['banner_image']
+        print (banner_image)
         address_line1 = request.form['address1']
         address_line2 = request.form['address2']
         city = request.form['sttt']
@@ -318,34 +336,49 @@ def create_event():
         contact_no = request.form['contact_no']
         email = request.form['email']
         ticket_price = request.form['ticket_price']
-        if Event.createEvent(title, description, banner_image, address_line1, address_line2, city, state, country,
+
+        #event creation
+        even = Event.createEvent(title, description,"good", address_line1, address_line2, city, state, country,
                              terms_and_condition, event_category, event_date, event_time, contact_no, email,
-                             ticket_price):
+                             ticket_price)
+        if even[0]:
+
+            ###########
+            print (even[1])
+            mongo.save_file(even[1], banner_image)
+            mongo.db.image.insert({'event id': even[1],'filename':even[1]}) 
+            ##########
             return redirect(url_for('Profile_of_User'))
     return redirect(url_for('create_event_template'))
+
+
 
 
 @app.route('/book_event/<_id>/<title>/<ticket_price>/<event_date>', methods=['POST', 'GET'])
 def book_event(_id,title,ticket_price,event_date):
     if request.method == 'POST':
-            user = Database.find_one('test', {'username': session['username']})
-            user_id = user['_id']
-            Booking.new_booking(_id, user_id)
-            bookings = list(Database.find('booking', {'booked_by': user_id}))[-1]
-            current_booking_id = bookings['_id']
-            '''event_name = Database.find_one('event', {'_id': current_id })
+#trying the login thing
+        if session.get('logged_in') is None:
+            leftover = True
+            return redirect(url_for('login_template', leftover=leftover))
+        user = Database.find_one('test', {'username': session['username']})
+        user_id = user['_id']
+        Booking.new_booking(_id, user_id)
+        bookings = list(Database.find('booking', {'booked_by': user_id}))[-1]
+        current_booking_id = bookings['_id']
+        '''event_name = Database.find_one('event', {'_id': current_id })
 
-            print(bookings)
-            print(type(bookings))
-            print(event_name)
-            print(type(event_name))
-            print(current_id)'''
-            #return redirect(url_for('booked_template',bookings = bookings,events =events))
-            return redirect(url_for('booked_template', event_name =title, current_booking_id=current_booking_id,ticket_price=ticket_price,event_date=event_date ))
-            #return render_template('booked.html', bookings = bookings,events =events)
+        print(bookings)
+        print(type(bookings))
+        print(event_name)
+        print(type(event_name))
+        print(current_id)'''
+        #return redirect(url_for('booked_template',bookings = bookings,events =events))
+        return redirect(url_for('booked_template', event_name =title, current_booking_id=current_booking_id,ticket_price=ticket_price,event_date=event_date ))
+        #return render_template('booked.html', bookings = bookings,events =events)
 
-    return redirect(url_for('event_page',_id=_id))
-    
+    return render_template('profile.html')
+
 
 @app.route('/event_page/<_id>')
 def event_page(_id):
