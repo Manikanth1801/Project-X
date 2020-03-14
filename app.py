@@ -308,6 +308,7 @@ It is to design update, delete feature of the user after login. e.g. Updating Pa
 def acc_details():
 update asap
 '''
+#### this module for upload images for events
 
 ######
 @app.route('/file/<filename>')
