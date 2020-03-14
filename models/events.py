@@ -31,7 +31,8 @@ class Event(object):
         new_event = cls(session['username'], title, description, banner_image, address_line1, address_line2, city, state, country, terms_and_condition, event_category, event_date, event_time, contact_no, email, ticket_price)
         new_event.save_event_mongo()
         flash('Event details has been added successfully', 'success')
-        return True
+        return (True,(new_event._id))
+
 
     def json_event(self):
         return {
