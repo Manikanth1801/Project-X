@@ -2,6 +2,7 @@
 
 {% block body %}
   <h1>Dashboard <small> Welcome {{session.username}}</small></h1>
+<h2> Events Booked</h2>
   <hr>
   <table class="table table-striped">
     <tr>
@@ -23,4 +24,5 @@
       {% endfor %}
     {% endfor %}
   </table>
+  <h2> Events Created by You</h2>
 {% endblock %}
