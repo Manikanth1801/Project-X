@@ -25,4 +25,27 @@
     {% endfor %}
   </table>
   <h2> Events Created by You</h2>
+      <hr>
+  <table class="table table-striped">
+    <tr>
+      <th>Price</th>
+      <th>Title</th>
+      <th>Date</th>
+      <th>Time</th>
+      <th></th>
+      <th></th>
+    </tr>
+      {% for event in eve_created %}
+          {% for one_event in event %}
+            <tr>
+          <td>{{one_event.ticket_price}}</td>
+          <td>{{one_event.title}}</td>
+          <td>{{one_event.event_date}}</td>
+          <td>{{one_event.event_time}}</td>
+        </tr>
+          {% endfor %}
+    {% endfor %}
+    </table>
+
+
 {% endblock %}
