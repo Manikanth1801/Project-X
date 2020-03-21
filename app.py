@@ -178,6 +178,9 @@ def logout_user():
 def Profile_of_User():
     user_id = Database.find_one('test', {'username': session['username']})['_id']
     user_data= Database.find('booking', {'booked_by': user_id})
+    #changes are done
+    eve_created_by_user=Database.find('event', {'username': session['username']})
+    ###################
     event_ids=[]
     for i in user_data:
         event_ids.append(i['event_id'])
@@ -188,7 +191,7 @@ def Profile_of_User():
 
     print(event_list)
     print(event_ids)
-    return render_template("profile.html", event_list=event_list)
+    return render_template("profile.html", event_list=event_list, eve_created=eve_created_by_user)
 
 #------------------------------------------------------------------------------------------------------------------------
 
